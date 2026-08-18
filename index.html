@@ -1,0 +1,1595 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>교동 기억지도</title>
+<meta name="description" content="대구 교동의 70년 골목 이야기를 10개의 QR로 걷는 도시 아카이빙 지도">
+<meta property="og:title" content="교동 기억지도">
+<meta property="og:description" content="교동의 70년 역사를 10개의 QR을 따라 걸어보세요">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%93%8D%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Song+Myung&family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;700&family=Nanum+Pen+Script&display=swap">
+<style>
+/* ————————————————————————————————
+   교동 기억지도 — 기록 대장 디자인 시스템
+   갱지 · 먹 · 인주 · 도면남색 · 금박
+———————————————————————————————— */
+:root{
+  --paper:#F2EFE8;        /* 갱지 바탕 */
+  --card:#FAF8F3;         /* 대장 용지 */
+  --card-2:#EFEBE0;       /* 용지 음영 */
+  --ink:#262119;          /* 먹 */
+  --muted:#6F6759;        /* 흐린 먹 */
+  --faint:#98907F;
+  --line:#D9D2C2;         /* 괘선 */
+  --line-strong:#B4A98F;  /* 굵은 괘선 */
+  --seal:#C23B2A;         /* 인주 */
+  --seal-soft:#C23B2A22;
+  --plan:#2F4F76;         /* 도면 남색 */
+  --plan-soft:#2F4F7618;
+  --gold:#9C8034;         /* 금박 */
+  --shadow:0 2px 10px rgba(38,33,25,.08), 0 12px 32px rgba(38,33,25,.07);
+  --ok:#3E6B45;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#16140F;
+    --card:#211E17;
+    --card-2:#2A261D;
+    --ink:#EAE3D3;
+    --muted:#A79E8B;
+    --faint:#7C745F;
+    --line:#3B362A;
+    --line-strong:#57503D;
+    --seal:#E2604B;
+    --seal-soft:#E2604B2A;
+    --plan:#8FA9CE;
+    --plan-soft:#8FA9CE20;
+    --gold:#C7A65A;
+    --shadow:0 2px 10px rgba(0,0,0,.4), 0 14px 36px rgba(0,0,0,.35);
+    --ok:#7FAE86;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#16140F;
+  --card:#211E17;
+  --card-2:#2A261D;
+  --ink:#EAE3D3;
+  --muted:#A79E8B;
+  --faint:#7C745F;
+  --line:#3B362A;
+  --line-strong:#57503D;
+  --seal:#E2604B;
+  --seal-soft:#E2604B2A;
+  --plan:#8FA9CE;
+  --plan-soft:#8FA9CE20;
+  --gold:#C7A65A;
+  --shadow:0 2px 10px rgba(0,0,0,.4), 0 14px 36px rgba(0,0,0,.35);
+  --ok:#7FAE86;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--paper);
+  background-image:radial-gradient(rgba(38,33,25,.028) 1px, transparent 1.4px);
+  background-size:22px 22px;
+  color:var(--ink);
+  font-family:'Gowun Batang','Noto Serif KR',Batang,serif;
+  font-size:16.5px;
+  line-height:1.72;
+  -webkit-text-size-adjust:100%;
+}
+h1,h2,h3,h4{font-family:'Song Myung','Gowun Batang',Batang,serif;font-weight:400;line-height:1.32;margin:0;text-wrap:balance}
+p{margin:.4em 0}
+a{color:var(--plan)}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2.5px solid var(--plan);outline-offset:2px;border-radius:2px}
+img,svg{max-width:100%}
+.label{font-family:'IBM Plex Sans KR','Malgun Gothic',sans-serif;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.num{font-variant-numeric:tabular-nums}
+.skip{position:absolute;left:-999px;top:0;background:var(--ink);color:var(--paper);padding:8px 14px;z-index:99}
+.skip:focus{left:8px;top:8px}
+
+/* ——— 상단 바 ——— */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line-strong);
+}
+.topbar-in{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:10px 16px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);flex-shrink:0}
+.brand-seal{
+  width:30px;height:30px;border:2px solid var(--seal);border-radius:6px;
+  color:var(--seal);display:grid;place-items:center;
+  font-family:'Song Myung',serif;font-size:.78rem;line-height:1;
+  transform:rotate(-4deg);
+}
+.brand-name{font-family:'Song Myung',serif;font-size:1.02rem;letter-spacing:.06em}
+nav.tabs{display:flex;gap:2px;overflow-x:auto;margin-left:auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs a{
+  font-family:'IBM Plex Sans KR',sans-serif;font-size:.85rem;font-weight:500;
+  color:var(--muted);text-decoration:none;padding:7px 11px;border-radius:4px;white-space:nowrap;
+  border-bottom:2px solid transparent;
+}
+nav.tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--seal)}
+nav.tabs a:hover{color:var(--ink)}
+
+/* ——— 샘플 데이터 안내 ——— */
+.demo-strip{
+  background:var(--plan-soft);border-bottom:1px solid var(--line);
+  font-family:'IBM Plex Sans KR',sans-serif;font-size:.76rem;color:var(--muted);
+  text-align:center;padding:5px 14px;
+}
+.demo-strip b{color:var(--plan);font-weight:600}
+
+/* ——— 공통 레이아웃 ——— */
+main{max-width:760px;margin:0 auto;padding:26px 16px 70px}
+.view{display:none}
+.view.on{display:block;animation:vfade .35s ease}
+@keyframes vfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.view:focus{outline:none}
+.wide{max-width:980px;margin:0 auto}
+
+/* ——— 표지 ——— */
+.cover{
+  background:var(--card);border:1.5px solid var(--ink);box-shadow:var(--shadow);
+  position:relative;padding:0;overflow:hidden;
+}
+.cover::before{
+  content:"";position:absolute;inset:9px;border:1px solid var(--line-strong);pointer-events:none;
+}
+.cover-in{display:flex;gap:10px;min-height:480px}
+.cover-main{flex:1;padding:44px 30px 38px;display:flex;flex-direction:column}
+.cover-title-strip{
+  writing-mode:vertical-rl;
+  font-family:'Song Myung',serif;
+  font-size:clamp(2.6rem, 9vw, 4.2rem);
+  letter-spacing:.18em;
+  padding:40px 26px 40px 20px;
+  border-left:1px solid var(--line-strong);
+  color:var(--ink);
+  display:flex;align-items:flex-start;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 34px, var(--line) 34px 35px);
+}
+.cover-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.cover-eyebrow .rule{flex:1;height:1px;background:var(--line-strong)}
+.cover-sub{font-size:1.16rem;line-height:1.85;max-width:26em;margin:6px 0 0}
+.cover-key{
+  margin:22px 0 0;padding:14px 18px;border-left:3px solid var(--seal);
+  background:var(--card-2);font-size:1.02rem;line-height:1.8;
+}
+.cover-stats{display:flex;gap:0;margin:26px 0 0;border:1px solid var(--line-strong);background:var(--card)}
+.cover-stats div{flex:1;padding:12px 8px;text-align:center;border-right:1px solid var(--line)}
+.cover-stats div:last-child{border-right:0}
+.cover-stats .v{font-family:'Song Myung',serif;font-size:1.5rem;display:block}
+.cover-stats .k{font-family:'IBM Plex Sans KR',sans-serif;font-size:.72rem;color:var(--muted);letter-spacing:.1em}
+.cover-cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.cover-foot{margin-top:auto;padding-top:26px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.cover-foot .meta{font-family:'IBM Plex Sans KR',sans-serif;font-size:.75rem;color:var(--faint);line-height:1.7}
+.big-seal{
+  width:74px;height:74px;border:3px solid var(--seal);border-radius:10px;color:var(--seal);
+  display:grid;place-items:center;font-family:'Song Myung',serif;font-size:1.35rem;letter-spacing:.1em;
+  transform:rotate(-6deg);line-height:1.25;text-align:center;
+  background:var(--seal-soft);flex-shrink:0;
+}
+@media (max-width:640px){
+  .cover-in{min-height:0}
+  .cover-main{padding:30px 20px 28px}
+  .cover-title-strip{font-size:2.5rem;padding:26px 16px 26px 12px}
+}
+
+/* ——— 버튼 ——— */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'IBM Plex Sans KR',sans-serif;font-size:.92rem;font-weight:600;
+  padding:11px 18px;border-radius:4px;text-decoration:none;border:1.5px solid var(--ink);
+  background:var(--ink);color:var(--paper);transition:transform .12s ease, box-shadow .12s ease;
+}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.seal{background:var(--seal);border-color:var(--seal);color:#FBF7EE}
+.btn.small{padding:7px 12px;font-size:.82rem}
+
+/* ——— 섹션 제목 ——— */
+.sec-head{display:flex;align-items:baseline;gap:12px;margin:34px 0 14px}
+.sec-head h2{font-size:1.5rem}
+.sec-head .rule{flex:1;height:1px;background:var(--line-strong)}
+.sec-head .label{transform:translateY(-2px)}
+
+/* ——— 지도 ——— */
+.map-frame{
+  background:var(--card);border:1.5px solid var(--ink);box-shadow:var(--shadow);padding:14px;
+}
+.map-frame svg{display:block;width:100%;height:auto}
+.map-cap{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px;
+  font-family:'IBM Plex Sans KR',sans-serif;font-size:.76rem;color:var(--muted)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.legend i{display:inline-block;width:18px;height:0;border-top:3px dashed var(--seal);vertical-align:middle;margin-right:5px}
+.legend .pin-demo{display:inline-grid;place-items:center;width:17px;height:17px;border:1.5px solid var(--seal);
+  border-radius:50%;color:var(--seal);font-size:.62rem;font-weight:700;margin-right:5px}
+.m-street{stroke:var(--paper);stroke-linecap:round}
+.m-block{fill:var(--plan-soft)}
+.m-bld{fill:none;stroke:var(--plan);stroke-opacity:.45;stroke-width:1.1}
+.m-name{font-family:'IBM Plex Sans KR',sans-serif;font-size:11.5px;fill:var(--muted);letter-spacing:.08em}
+.m-route{fill:none;stroke:var(--seal);stroke-width:2.6;stroke-dasharray:2 7;stroke-linecap:round}
+.m-dist{font-family:'IBM Plex Sans KR',sans-serif;font-size:10.5px;fill:var(--seal);font-weight:600}
+.m-pin circle{fill:var(--card);stroke:var(--seal);stroke-width:2}
+.m-pin.gone circle{stroke-dasharray:3 3}
+.m-pin text{font-family:'IBM Plex Sans KR',sans-serif;font-size:12.5px;font-weight:700;fill:var(--seal)}
+.m-pin{cursor:pointer}
+.m-pin:hover circle{fill:var(--seal-soft)}
+.m-compass text{font-family:'Song Myung',serif;font-size:13px;fill:var(--muted)}
+.m-scale line,.m-compass line,.m-compass path{stroke:var(--muted)}
+.m-scale text{font-family:'IBM Plex Sans KR',sans-serif;font-size:9.5px;fill:var(--muted)}
+@media (prefers-reduced-motion: no-preference){
+  .view.on .m-route{stroke-dashoffset:600;animation:routeDraw 2.4s ease forwards .3s}
+  @keyframes routeDraw{to{stroke-dashoffset:0}}
+}
+
+/* ——— 목록(대장 색인) ——— */
+.index-list{list-style:none;margin:0;padding:0;border:1.5px solid var(--ink);background:var(--card);box-shadow:var(--shadow)}
+.index-list li{border-bottom:1px solid var(--line)}
+.index-list li:last-child{border-bottom:0}
+.index-list a{
+  display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;
+  padding:13px 16px;text-decoration:none;color:var(--ink);
+}
+.index-list a:hover{background:var(--card-2)}
+.idx-no{
+  width:38px;height:38px;border:1.8px solid var(--seal);border-radius:50%;color:var(--seal);
+  display:grid;place-items:center;font-family:'IBM Plex Sans KR',sans-serif;font-weight:700;font-size:.95rem;
+  transform:rotate(-3deg);
+}
+li.gone .idx-no{border-style:dashed}
+.idx-name{font-family:'Song Myung',serif;font-size:1.08rem}
+.idx-sub{font-family:'IBM Plex Sans KR',sans-serif;font-size:.76rem;color:var(--muted);margin-top:2px}
+.idx-year{font-family:'IBM Plex Sans KR',sans-serif;font-size:.8rem;color:var(--faint);text-align:right;line-height:1.5}
+
+/* ——— 상점 대장 카드 ——— */
+.ledger{
+  background:var(--card);border:1.5px solid var(--ink);box-shadow:var(--shadow);
+  position:relative;
+}
+.ledger-head{padding:24px 24px 0;position:relative}
+.reg-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.reg-no{
+  font-family:'IBM Plex Sans KR',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.12em;
+  color:var(--seal);border:1.8px solid var(--seal);border-radius:4px;padding:3px 9px;transform:rotate(-2deg);
+  background:var(--seal-soft);
+}
+.reg-type{font-family:'IBM Plex Sans KR',sans-serif;font-size:.76rem;color:var(--muted);letter-spacing:.1em}
+.reg-type.gone{color:var(--seal)}
+.ledger-title{font-size:2rem;margin:10px 0 2px}
+.ledger-tag{color:var(--muted);font-size:1rem;margin:0 0 16px}
+.field-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  border-top:1.5px solid var(--ink);border-left:1px solid var(--line);
+  margin:0 24px;
+}
+.field{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:9px 12px;background:var(--card)}
+.field .label{display:block;margin-bottom:2px;font-size:.68rem}
+.field .v{font-family:'IBM Plex Sans KR',sans-serif;font-size:.9rem;font-weight:500}
+.mat-row{display:flex;gap:6px;flex-wrap:wrap;padding:14px 24px 0}
+.chip{
+  font-family:'IBM Plex Sans KR',sans-serif;font-size:.72rem;font-weight:500;
+  border:1px solid var(--line-strong);border-radius:99px;padding:3px 10px;color:var(--muted);background:var(--card)
+}
+.chip b{font-weight:700}
+.chip.done{border-color:var(--ok);color:var(--ok)}
+.chip.wip{border-color:var(--gold);color:var(--gold)}
+.ledger-body{padding:10px 24px 26px}
+.ledger-sec{margin-top:30px}
+.ledger-sec-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ledger-sec-head .no{
+  font-family:'IBM Plex Sans KR',sans-serif;font-size:.72rem;font-weight:700;color:var(--paper);
+  background:var(--ink);border-radius:3px;padding:2px 7px;letter-spacing:.08em;
+}
+.ledger-sec-head h3{font-size:1.22rem}
+.ledger-sec-head .rule{flex:1;height:1px;background:var(--line)}
+.src-note{font-family:'IBM Plex Sans KR',sans-serif;font-size:.73rem;color:var(--faint);margin-top:8px}
+
+/* 인터뷰 영상 자리 */
+.video-ph{
+  position:relative;background:#171410;border:1.5px solid var(--ink);
+  aspect-ratio:16/9;display:grid;place-items:center;overflow:hidden;
+}
+.video-ph::before,.video-ph::after{
+  content:"";position:absolute;left:0;right:0;height:14px;
+  background-image:repeating-linear-gradient(90deg,#000 0 10px,transparent 10px 22px);
+  opacity:.9;
+}
+.video-ph::before{top:0}.video-ph::after{bottom:0}
+.video-ph .vtitle{position:absolute;left:14px;bottom:22px;color:#D8CFBB;font-family:'IBM Plex Sans KR',sans-serif;font-size:.78rem;letter-spacing:.1em}
+.video-ph .rec{position:absolute;right:14px;top:22px;color:#E2604B;font-family:'IBM Plex Sans KR',sans-serif;font-size:.72rem;letter-spacing:.14em}
+.play-btn{
+  width:64px;height:64px;border-radius:50%;border:2px solid #D8CFBB;background:rgba(0,0,0,.35);
+  display:grid;place-items:center;color:#D8CFBB;transition:transform .15s ease;
+}
+.play-btn:hover{transform:scale(1.06)}
+.video-note{
+  display:none;font-family:'IBM Plex Sans KR',sans-serif;font-size:.8rem;color:var(--muted);
+  border:1px dashed var(--line-strong);padding:10px 12px;margin-top:10px;background:var(--card-2)
+}
+.video-note.on{display:block}
+.story-list{margin:14px 0 0;padding:0;list-style:none}
+.story-list li{padding:7px 0 7px 20px;position:relative;border-bottom:1px dotted var(--line)}
+.story-list li::before{content:"—";position:absolute;left:0;color:var(--seal)}
+
+/* 과거↔현재 슬라이더 */
+.ba{position:relative;border:1.5px solid var(--ink);background:var(--card-2);user-select:none}
+.ba .mat{padding:10px}
+.ba-stage{position:relative;overflow:hidden}
+.ba-stage svg{display:block;width:100%;height:auto}
+.ba-top{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--cut,50%)) 0 0)}
+.ba-bar{
+  position:absolute;top:0;bottom:0;left:var(--cut,50%);width:0;
+  border-left:2.5px solid var(--seal);transform:translateX(-1px);pointer-events:none;
+}
+.ba-bar::after{
+  content:"◂ ▸";position:absolute;top:50%;left:0;transform:translate(-50%,-50%);
+  background:var(--seal);color:#FBF7EE;border-radius:99px;padding:5px 9px;
+  font-size:.72rem;letter-spacing:-.02em;white-space:nowrap;font-family:'IBM Plex Sans KR',sans-serif;
+}
+.ba input[type=range]{
+  position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0;touch-action:none;
+}
+.ba-tags{position:absolute;left:18px;top:18px;display:flex;gap:6px;pointer-events:none}
+.ba-tags span,.ba-tag-now{
+  font-family:'IBM Plex Sans KR',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.08em;
+  background:rgba(20,17,12,.62);color:#EFE7D2;padding:3px 9px;border-radius:3px;
+}
+.ba-tag-now{position:absolute;right:18px;top:18px;pointer-events:none}
+.ba-cap{display:flex;justify-content:space-between;gap:10px;padding:9px 12px;
+  font-family:'IBM Plex Sans KR',sans-serif;font-size:.75rem;color:var(--muted);border-top:1px solid var(--line)}
+
+/* 사장님의 기억 */
+.memory{
+  position:relative;background:var(--card-2);border:1px solid var(--line-strong);
+  padding:26px 26px 22px;overflow:hidden;
+}
+.memory::before{
+  content:"“";position:absolute;left:14px;top:2px;font-family:'Song Myung',serif;
+  font-size:4.6rem;color:var(--seal);opacity:.3;line-height:1;
+}
+.memory p.hand{
+  font-family:'Nanum Pen Script',cursive;font-size:1.72rem;line-height:1.55;margin:0;
+  color:var(--ink);
+}
+.memory .who{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:14px;
+  font-family:'IBM Plex Sans KR',sans-serif;font-size:.8rem;color:var(--muted)}
+.mini-seal{
+  width:34px;height:34px;border:2px solid var(--seal);border-radius:6px;color:var(--seal);
+  display:grid;place-items:center;font-family:'Song Myung',serif;font-size:.72rem;transform:rotate(6deg);
+  background:var(--seal-soft);line-height:1.15;text-align:center;
+}
+
+/* 물건 카드 */
+.objects{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.obj{border:1px solid var(--line-strong);background:var(--card);padding:14px;position:relative}
+.obj::before{content:attr(data-n);position:absolute;right:10px;top:8px;font-family:'IBM Plex Sans KR',sans-serif;
+  font-size:.68rem;color:var(--faint)}
+.obj .oi{width:40px;height:40px;border:1.5px solid var(--plan);border-radius:50%;display:grid;place-items:center;
+  color:var(--plan);background:var(--plan-soft);margin-bottom:9px;font-size:1.1rem}
+.obj .on{font-family:'IBM Plex Sans KR',sans-serif;font-weight:600;font-size:.88rem}
+.obj .od{font-size:.84rem;color:var(--muted);line-height:1.6;margin-top:3px}
+
+/* 다음 이야기 티켓 */
+.next-ticket{
+  display:flex;align-items:stretch;border:1.5px solid var(--ink);background:var(--card);
+  box-shadow:var(--shadow);text-decoration:none;color:var(--ink);overflow:hidden;
+}
+.next-ticket:hover{background:var(--card-2)}
+.nt-left{
+  writing-mode:vertical-rl;font-family:'IBM Plex Sans KR',sans-serif;font-size:.7rem;letter-spacing:.24em;
+  color:var(--paper);background:var(--seal);padding:12px 7px;display:flex;align-items:center;flex-shrink:0;
+}
+.nt-main{flex:1;padding:14px 16px;border-right:1px dashed var(--line-strong)}
+.nt-main .label{color:var(--seal)}
+.nt-name{font-family:'Song Myung',serif;font-size:1.3rem;margin-top:3px}
+.nt-sub{font-family:'IBM Plex Sans KR',sans-serif;font-size:.8rem;color:var(--muted);margin-top:3px}
+.nt-dist{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:10px 18px;gap:2px;flex-shrink:0}
+.nt-dist .d{font-family:'Song Myung',serif;font-size:1.6rem}
+.nt-dist .w{font-family:'IBM Plex Sans KR',sans-serif;font-size:.72rem;color:var(--muted)}
+.nt-dist .arrow{font-size:1.2rem;color:var(--seal)}
+
+/* 방명록 */
+.stamp-zone{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.stamp-btn{
+  display:flex;align-items:center;gap:10px;border:2px solid var(--seal);background:var(--card);
+  color:var(--seal);padding:12px 18px;border-radius:8px;font-family:'IBM Plex Sans KR',sans-serif;
+  font-weight:700;font-size:.95rem;transition:transform .12s ease;
+}
+.stamp-btn:hover{transform:translateY(-1px)}
+.stamp-btn[disabled]{opacity:.9;cursor:default;background:var(--seal-soft)}
+.stamp-count{font-family:'IBM Plex Sans KR',sans-serif;font-size:.85rem;color:var(--muted)}
+.stamp-count b{color:var(--seal);font-size:1.05rem}
+.stamp-wall{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.stamp-mini{
+  width:30px;height:30px;border:1.8px solid var(--seal);border-radius:6px;color:var(--seal);
+  display:grid;place-items:center;font-family:'Song Myung',serif;font-size:.62rem;
+  background:var(--seal-soft);
+}
+.stamp-mini.mine{animation:stampIn .45s cubic-bezier(.2,1.6,.4,1)}
+.stamp-mini:nth-child(3n){transform:rotate(7deg)}
+.stamp-mini:nth-child(3n+1){transform:rotate(-6deg)}
+.stamp-mini:nth-child(3n+2){transform:rotate(2deg)}
+@keyframes stampIn{0%{transform:scale(2.1) rotate(-14deg);opacity:0}70%{transform:scale(.95) rotate(3deg)}100%{opacity:1}}
+.review-list{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.review{border:1px solid var(--line-strong);background:var(--card);padding:11px 14px}
+.review .rhead{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Sans KR',sans-serif;font-size:.78rem;color:var(--muted)}
+.review .rhead b{color:var(--ink);font-weight:600}
+.review .rtext{margin:5px 0 0;font-size:.95rem;line-height:1.7}
+.review .demo-chip{font-size:.66rem;border:1px solid var(--gold);color:var(--gold);border-radius:99px;padding:1px 7px;margin-left:auto}
+.review-form{margin-top:14px;border:1px dashed var(--line-strong);padding:14px;background:var(--card-2)}
+.review-form .row{display:flex;gap:8px;flex-wrap:wrap}
+.review-form input[type=text],.review-form textarea,.c-form input,.c-form select,.c-form textarea{
+  font-family:'Gowun Batang',serif;font-size:.95rem;color:var(--ink);
+  background:var(--card);border:1px solid var(--line-strong);border-radius:4px;padding:9px 11px;width:100%;
+}
+.review-form input[type=text]{max-width:180px}
+.review-form textarea{resize:vertical;min-height:64px;margin-top:8px}
+.form-foot{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.form-note{font-family:'IBM Plex Sans KR',sans-serif;font-size:.72rem;color:var(--faint)}
+
+/* 스팟 내비 */
+.spot-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px}
+.spot-nav .pos{font-family:'IBM Plex Sans KR',sans-serif;font-size:.8rem;color:var(--muted);letter-spacing:.08em}
+
+/* ——— 소개 ——— */
+.prose{max-width:640px}
+.card{background:var(--card);border:1.5px solid var(--ink);box-shadow:var(--shadow);padding:22px 24px}
+.quote-big{
+  font-family:'Song Myung',serif;font-size:1.32rem;line-height:1.9;
+  border-left:3px solid var(--seal);padding:6px 0 6px 20px;margin:18px 0;
+}
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0}
+.flow .fchip{
+  font-family:'IBM Plex Sans KR',sans-serif;font-size:.85rem;font-weight:600;
+  border:1.5px solid var(--plan);color:var(--plan);background:var(--plan-soft);
+  border-radius:99px;padding:6px 14px;
+}
+.flow .fchip.seal{border-color:var(--seal);color:var(--seal);background:var(--seal-soft)}
+.flow .arr{color:var(--faint);font-family:'IBM Plex Sans KR',sans-serif}
+.roadmap{width:100%;border-collapse:collapse;font-size:.92rem}
+.roadmap th{
+  font-family:'IBM Plex Sans KR',sans-serif;font-size:.74rem;letter-spacing:.1em;color:var(--muted);
+  text-align:left;border-bottom:1.5px solid var(--ink);padding:8px 10px;font-weight:600;
+}
+.roadmap td{border-bottom:1px solid var(--line);padding:10px;vertical-align:top}
+.roadmap td.st{font-family:'IBM Plex Sans KR',sans-serif;font-weight:700;white-space:nowrap;color:var(--seal)}
+.roadmap-scroll{overflow-x:auto}
+.effects{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:14px}
+.eff{border:1px solid var(--line-strong);background:var(--card);padding:16px}
+.eff .et{font-family:'IBM Plex Sans KR',sans-serif;font-weight:700;font-size:.92rem;display:flex;gap:8px;align-items:center}
+.eff .et i{width:8px;height:8px;border-radius:50%;background:var(--seal);display:inline-block}
+.eff p{font-size:.88rem;color:var(--muted);line-height:1.7;margin:6px 0 0}
+.mtypes{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.mtypes .chip{font-size:.8rem;padding:5px 13px}
+ul.tight{margin:8px 0;padding-left:20px}
+ul.tight li{margin:5px 0}
+
+/* ——— 제보 ——— */
+.c-form label{display:block;font-family:'IBM Plex Sans KR',sans-serif;font-size:.8rem;font-weight:600;margin:14px 0 5px}
+.c-form textarea{min-height:110px}
+.c-list{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+
+/* ——— QR 시트 ——— */
+.qr-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.qr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.qr-ticket{
+  border:1.5px solid var(--ink);background:var(--card);position:relative;
+  display:flex;flex-direction:column;break-inside:avoid;page-break-inside:avoid;
+}
+.qr-ticket::before{
+  content:"";position:absolute;left:8px;right:8px;top:8px;bottom:8px;
+  border:1px dashed var(--line-strong);pointer-events:none;
+}
+.qrt-head{display:flex;align-items:center;gap:9px;padding:16px 18px 8px}
+.qrt-no{
+  width:30px;height:30px;border:1.8px solid var(--seal);border-radius:50%;color:var(--seal);
+  display:grid;place-items:center;font-family:'IBM Plex Sans KR',sans-serif;font-weight:700;font-size:.82rem;flex-shrink:0;
+}
+.qrt-name{font-family:'Song Myung',serif;font-size:1.06rem;line-height:1.3}
+.qrt-cat{font-family:'IBM Plex Sans KR',sans-serif;font-size:.7rem;color:var(--muted)}
+.qr-slot{
+  margin:6px 18px;background:#fff;border:1px solid var(--line-strong);
+  aspect-ratio:1;display:grid;place-items:center;padding:10px;
+}
+.qr-slot svg{width:100%;height:100%;display:block}
+.qr-slot .qr-wait{font-family:'IBM Plex Sans KR',sans-serif;font-size:.72rem;color:#8A8271;text-align:center;padding:10px}
+.qrt-foot{padding:8px 18px 16px;font-family:'IBM Plex Sans KR',sans-serif;font-size:.72rem;color:var(--muted);line-height:1.6}
+.qrt-foot b{color:var(--ink)}
+.qr-guide{margin-top:20px}
+@media print{
+  body{background:#fff}
+  .topbar,.demo-strip,.qr-tools,footer,.sec-head .label,.no-print{display:none !important}
+  main{max-width:100%;padding:0}
+  .view{display:none !important}
+  #view-qr{display:block !important}
+  .qr-grid{grid-template-columns:repeat(2,1fr);gap:8mm}
+  .qr-ticket{box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .qr-guide,.sec-head{display:none !important}
+  @page{size:A4;margin:12mm}
+}
+
+/* ——— 푸터 / 토스트 ——— */
+footer{border-top:1.5px solid var(--line-strong);margin-top:60px}
+.foot-in{max-width:760px;margin:0 auto;padding:26px 16px 40px;display:flex;gap:18px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.foot-in .f-title{font-family:'Song Myung',serif;font-size:1.05rem}
+.foot-in p{font-size:.82rem;color:var(--muted);line-height:1.8;margin:6px 0 0;font-family:'IBM Plex Sans KR',sans-serif}
+#toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);opacity:0;pointer-events:none;
+  background:var(--ink);color:var(--paper);font-family:'IBM Plex Sans KR',sans-serif;font-size:.86rem;
+  padding:10px 18px;border-radius:6px;box-shadow:var(--shadow);transition:all .25s ease;z-index:99;max-width:90vw;text-align:center;
+}
+#toast.on{transform:translate(-50%,0);opacity:1}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  html{scroll-behavior:auto}
+}
+</style>
+
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="#/" aria-label="교동 기억지도 표지로">
+      <span class="brand-seal" aria-hidden="true">記憶</span>
+      <span class="brand-name">교동 기억지도</span>
+    </a>
+    <nav class="tabs" aria-label="주요 화면">
+      <a href="#/" data-nav="home">표지</a>
+      <a href="#/map" data-nav="map">기억지도</a>
+      <a href="#/about" data-nav="about">프로젝트</a>
+      <a href="#/qr" data-nav="qr">QR 인쇄</a>
+      <a href="#/contribute" data-nav="contribute">기억 제보</a>
+    </nav>
+  </div>
+</header>
+
+<div class="demo-strip" role="note">
+  <b>프로토타입</b> — 등장하는 상호·인물·인용·연도는 모두 <b>예시 데이터</b>이며, 현장 조사와 인터뷰 수집 후 실제 기록으로 교체됩니다.
+</div>
+
+<main id="main">
+
+  <!-- ============ 표지 ============ -->
+  <section class="view" id="view-home" tabindex="-1" aria-label="표지">
+    <div class="cover">
+      <div class="cover-in">
+        <div class="cover-main">
+          <div class="cover-eyebrow">
+            <span class="label">대구 중구 교동 · 도시 아카이빙 리빙랩</span>
+            <span class="rule" aria-hidden="true"></span>
+            <span class="label num">EST. 1955*</span>
+          </div>
+          <h1 style="font-size:1.6rem;letter-spacing:.04em">골목에 남은 시간을 기록하다</h1>
+          <p class="cover-sub">
+            교동에 남아 있는 오래된 가게와 장소, 그곳에서 살아온 사람들의 이야기를
+            조사·기록하여 하나의 디지털 지도에 담습니다. 방문객은 골목의 QR을 스캔해
+            그 자리에 쌓인 시간을 직접 만납니다.
+          </p>
+          <div class="cover-key">
+            사라지는 가게가 아니라, <b>사라지지 않을 이야기</b>를 기록합니다.<br>
+            일반적인 “교동시장을 구경해 보세요”가 아니라 —
+            <b>“교동의 70년 역사를 10개의 QR을 따라 걸어보세요.”</b>
+          </div>
+          <div class="cover-stats" role="list" aria-label="아카이브 규모">
+            <div role="listitem"><span class="v num">10<small style="font-size:.85rem">곳</small></span><span class="k">등재 장소</span></div>
+            <div role="listitem"><span class="v num">1.1<small style="font-size:.85rem">km</small></span><span class="k">도보 코스</span></div>
+            <div role="listitem"><span class="v num">70<small style="font-size:.85rem">년</small></span><span class="k">기록 범위</span></div>
+          </div>
+          <div class="cover-cta">
+            <a class="btn seal" href="#/spot/1">No.01부터 걷기 시작 →</a>
+            <a class="btn ghost" href="#/map">기억지도 펼치기</a>
+          </div>
+          <div class="cover-foot">
+            <div class="meta">
+              교동 기억 리빙랩 · 프로토타입 v1<br>
+              *1955는 시장 형성기를 나타내는 예시 연도 — 문헌 확인 후 확정 <span class="num">[TODO: 근거]</span>
+            </div>
+            <div class="big-seal" aria-hidden="true">교동<br>기억</div>
+          </div>
+        </div>
+        <div class="cover-title-strip" aria-hidden="true">교동의 時間</div>
+      </div>
+    </div>
+
+    <div class="sec-head">
+      <h2>이 지도가 하는 일</h2><span class="rule" aria-hidden="true"></span>
+    </div>
+    <div class="effects" style="margin-top:0">
+      <div class="eff"><div class="et"><i></i>QR로 열리는 기록</div><p>가게 앞 QR을 스캔하면 그 자리의 등재 대장이 열립니다 — 인터뷰 영상, 과거와 오늘의 사진, 사장님의 기억.</p></div>
+      <div class="eff"><div class="et"><i></i>걸어서 잇는 70년</div><p>한 장소의 기록이 끝나면 “다음 이야기까지 150m”. 열 개의 QR이 하나의 도보 코스가 됩니다.</p></div>
+      <div class="eff"><div class="et"><i></i>시민이 쓰는 아카이브</div><p>방문자는 도장을 찍고 리뷰를 남기고, “내가 기억하는 교동”을 직접 제보합니다. 기록 → 활용 → 피드백 → 개선.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 기억지도 ============ -->
+  <section class="view" id="view-map" tabindex="-1" aria-label="기억지도">
+    <div class="wide">
+      <div class="sec-head">
+        <h2>기억지도</h2>
+        <span class="rule" aria-hidden="true"></span>
+        <span class="label">MEMORY MAP — 개념도</span>
+      </div>
+      <div class="map-frame">
+        <svg viewBox="0 0 800 560" role="img" aria-label="교동 골목 개념도 — 열 개의 등재 장소와 도보 루트">
+          <!-- 블록(도면 해칭) -->
+          <defs>
+            <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="7" stroke="currentColor" stroke-width="0.7" style="color:var(--plan)" opacity="0.28"/>
+            </pattern>
+          </defs>
+          <rect x="20" y="20" width="760" height="520" fill="url(#hatch)" class="m-block"/>
+          <!-- 골목(길) -->
+          <path d="M60 120 H740" class="m-street" stroke-width="46"/>
+          <path d="M60 460 H740" class="m-street" stroke-width="46"/>
+          <path d="M140 80 V500" class="m-street" stroke-width="40"/>
+          <path d="M650 80 V500" class="m-street" stroke-width="40"/>
+          <path d="M400 120 V460" class="m-street" stroke-width="28"/>
+          <path d="M140 290 H650" class="m-street" stroke-width="24"/>
+          <!-- 건물 힌트 -->
+          <g class="m-bld">
+            <rect x="200" y="160" width="70" height="44"/><rect x="290" y="160" width="52" height="60"/>
+            <rect x="470" y="170" width="80" height="50"/><rect x="560" y="330" width="52" height="46"/>
+            <rect x="200" y="330" width="64" height="52"/><rect x="300" y="360" width="56" height="42"/>
+            <rect x="470" y="330" width="56" height="40"/><rect x="188" y="500" width="80" height="26"/>
+            <rect x="430" y="500" width="90" height="26"/><rect x="60" y="180" width="44" height="60"/>
+          </g>
+          <!-- 길 이름 -->
+          <text x="400" y="106" text-anchor="middle" class="m-name">교동시장 골목</text>
+          <text x="668" y="290" class="m-name" transform="rotate(90 668 290)" text-anchor="middle">귀금속 거리</text>
+          <text x="395" y="448" text-anchor="middle" class="m-name">먹자골목</text>
+          <text x="124" y="290" class="m-name" transform="rotate(-90 124 290)" text-anchor="middle">옛 극장길</text>
+          <text x="400" y="278" text-anchor="middle" class="m-name">전자·음반 골목</text>
+          <!-- 도보 루트 -->
+          <path id="routePath" class="m-route" pathLength="600"
+            d="M150 120 L300 120 L470 120 L640 135 L650 300 L640 452 L450 468 L280 458 L150 400 L138 260 L150 140"/>
+          <!-- 구간 거리 -->
+          <text x="225" y="143" class="m-dist" text-anchor="middle">120m</text>
+          <text x="385" y="143" class="m-dist" text-anchor="middle">90m</text>
+          <text x="555" y="143" class="m-dist" text-anchor="middle">150m</text>
+          <text x="622" y="220" class="m-dist" text-anchor="middle">80m</text>
+          <text x="622" y="385" class="m-dist" text-anchor="middle">200m</text>
+          <text x="545" y="487" class="m-dist" text-anchor="middle">60m</text>
+          <text x="365" y="487" class="m-dist" text-anchor="middle">110m</text>
+          <text x="200" y="443" class="m-dist" text-anchor="middle">140m</text>
+          <text x="118" y="330" class="m-dist" text-anchor="middle" transform="rotate(-90 118 330)">170m</text>
+          <!-- 나침반 / 축척 -->
+          <g class="m-compass" transform="translate(745,52)">
+            <line x1="0" y1="16" x2="0" y2="-14" stroke-width="1.4"/>
+            <path d="M0 -14 L-5 -4 L5 -4 Z" fill="currentColor" style="color:var(--muted)"/>
+            <text x="0" y="32" text-anchor="middle">北</text>
+          </g>
+          <g class="m-scale" transform="translate(56,528)">
+            <line x1="0" y1="0" x2="90" y2="0" stroke-width="2"/>
+            <line x1="0" y1="-4" x2="0" y2="4" stroke-width="1.5"/><line x1="90" y1="-4" x2="90" y2="4" stroke-width="1.5"/>
+            <text x="45" y="-7" text-anchor="middle">약 100m (개념)</text>
+          </g>
+          <!-- 핀: JS가 채움 -->
+          <g id="mapPins"></g>
+        </svg>
+      </div>
+      <div class="map-cap">
+        <div class="legend">
+          <span><i aria-hidden="true"></i>도보 루트 (총 약 1.1km · 여유 있게 2시간)</span>
+          <span><span class="pin-demo" aria-hidden="true">N</span>등재 장소 (점선 = 사라진 공간)</span>
+        </div>
+        <span>※ 안내용 개념도 — 실제 축척·위치와 다릅니다</span>
+      </div>
+
+      <div class="sec-head">
+        <h2>등재 대장 색인</h2>
+        <span class="rule" aria-hidden="true"></span>
+        <span class="label num">REGISTRY 01–10</span>
+      </div>
+      <ol class="index-list" id="indexList"></ol>
+    </div>
+  </section>
+
+  <!-- ============ 상점 대장 (동적) ============ -->
+  <section class="view" id="view-spot" tabindex="-1" aria-label="장소 기록"></section>
+
+  <!-- ============ 프로젝트 소개 ============ -->
+  <section class="view" id="view-about" tabindex="-1" aria-label="프로젝트 소개">
+    <div class="sec-head">
+      <h2>교동 기억 리빙랩</h2>
+      <span class="rule" aria-hidden="true"></span>
+      <span class="label">ABOUT</span>
+    </div>
+
+    <div class="card">
+      <span class="label">문제의식</span>
+      <p class="quote-big">“교동의 공간은 변화하고 있지만,<br>그 공간에 담긴 이야기는 제대로 기록되지 않고 있다.”</p>
+      <p class="prose">
+        대구 교동은 시장·전자상가·귀금속·음식점 등 다양한 상업문화가 공존해 온 지역입니다.
+        오래된 상점과 골목, 상인들의 경험 같은 지역만의 역사·생활문화 자산이 남아 있지만,
+        상권과 공간이 바뀌면서 그 안에 담긴 상인들의 기억과 지역의 이야기도 함께 사라질 수 있습니다.
+        교동 기억지도는 이 이야기를 <b>주민과 함께 기록하고, 시민이 걸으며 경험하게</b> 만드는
+        도시 아카이빙 프로젝트입니다.
+      </p>
+    </div>
+
+    <div class="sec-head"><h3 style="font-size:1.25rem">무엇을 수집하나</h3><span class="rule" aria-hidden="true"></span></div>
+    <div class="card">
+      <p class="prose" style="margin-top:0">상인·주민 인터뷰를 중심으로, 한 장소당 여섯 종류의 기록을 짝지어 수집합니다.</p>
+      <div class="mtypes">
+        <span class="chip">🎙 인터뷰 (영상·음성)</span>
+        <span class="chip">🖼 과거 사진</span>
+        <span class="chip">📷 현재 사진</span>
+        <span class="chip">🎞 골목 영상</span>
+        <span class="chip">🧰 물건 (도구·간판·장부)</span>
+        <span class="chip">📜 역사자료 (문서·지도·기사)</span>
+      </div>
+      <ul class="tight" style="margin-top:14px">
+        <li><b>동의 기반 수집</b> — 촬영·게재 동의서, 초상권·저작권 확인 후 공개</li>
+        <li><b>원본 보존</b> — 원본은 무손실 보관, 지도에는 열람본 게재</li>
+        <li><b>출처 표기</b> — 모든 연도·사실 관계에 출처 명시, 미확인 정보는 “구술 증언”으로 구분</li>
+      </ul>
+    </div>
+
+    <div class="sec-head"><h3 style="font-size:1.25rem">리빙랩 — 함께 기록하는 구조</h3><span class="rule" aria-hidden="true"></span></div>
+    <div class="card">
+      <span class="label">참여 주체</span>
+      <div class="flow" role="list">
+        <span class="fchip" role="listitem">상인</span><span class="arr" aria-hidden="true">→</span>
+        <span class="fchip" role="listitem">주민</span><span class="arr" aria-hidden="true">→</span>
+        <span class="fchip" role="listitem">청년</span><span class="arr" aria-hidden="true">→</span>
+        <span class="fchip" role="listitem">시민</span><span class="arr" aria-hidden="true">→</span>
+        <span class="fchip" role="listitem">공공기관</span>
+      </div>
+      <span class="label">순환 구조</span>
+      <div class="flow" role="list">
+        <span class="fchip seal" role="listitem">기록</span><span class="arr" aria-hidden="true">→</span>
+        <span class="fchip seal" role="listitem">활용</span><span class="arr" aria-hidden="true">→</span>
+        <span class="fchip seal" role="listitem">피드백</span><span class="arr" aria-hidden="true">→</span>
+        <span class="fchip seal" role="listitem">개선</span><span class="arr" aria-hidden="true">↻</span>
+      </div>
+      <p class="prose" style="font-size:.92rem;color:var(--muted)">
+        단순한 역사 기록이 아니라, 지역 주민이 직접 참여하는 도시문제 해결형 리빙랩입니다.
+        방문자의 도장·리뷰·제보가 다음 기록의 출발점이 됩니다.
+      </p>
+    </div>
+
+    <div class="sec-head"><h3 style="font-size:1.25rem">실현 방안 — 5단계</h3><span class="rule" aria-hidden="true"></span></div>
+    <div class="card roadmap-scroll">
+      <table class="roadmap">
+        <thead><tr><th scope="col">단계</th><th scope="col">내용</th><th scope="col">산출물</th></tr></thead>
+        <tbody>
+          <tr><td class="st num">1 조사</td><td>사라진 가게·오래된 가게·주요 공간·상인 이야기 조사</td><td>등재 후보 목록, 사전 답사 기록</td></tr>
+          <tr><td class="st num">2 아카이빙</td><td>상인 인터뷰와 사진·영상 자료 디지털화</td><td>장소별 기록 대장 (본 프로토타입 양식)</td></tr>
+          <tr><td class="st num">3 플랫폼</td><td>「교동 기억지도」 제작, QR로 누구나 접근</td><td>웹 지도 + 현장 QR 10개소</td></tr>
+          <tr><td class="st num">4 리빙랩</td><td>상인·주민에게 결과물 공개, 의견 받아 지속 수정</td><td>피드백 반영 이력, 제보 아카이브</td></tr>
+          <tr><td class="st num">5 공공 연계</td><td>축적 데이터를 도시재생·관광·지역문화·상권 활성화 자료로 연계</td><td>공공 활용 데이터셋</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sec-head"><h3 style="font-size:1.25rem">기대 효과</h3><span class="rule" aria-hidden="true"></span></div>
+    <div class="effects">
+      <div class="eff"><div class="et"><i></i>지역 — 정체성 보존</div><p>사라질 수 있는 상인들의 기억과 지역의 역사를 기록으로 남깁니다.</p></div>
+      <div class="eff"><div class="et"><i></i>시민 — 새로운 경험</div><p>먹고 소비하는 교동을 넘어, 걸으며 역사를 발견하는 교동을 경험합니다.</p></div>
+      <div class="eff"><div class="et"><i></i>상인 — 스토리텔링</div><p>오래된 가게 자체가 하나의 지역 콘텐츠가 됩니다.</p></div>
+      <div class="eff"><div class="et"><i></i>공공 — 문화 데이터</div><p>축적된 아카이브를 도시재생·관광·상권 활성화 사업에 활용할 수 있습니다.</p></div>
+    </div>
+
+    <div class="card" style="margin-top:26px;border-color:var(--seal)">
+      <span class="label" style="color:var(--seal)">한 문장으로</span>
+      <p class="quote-big" style="border-color:var(--seal)">
+        “저희는 교동을 단순히 보존하려는 것이 아닙니다.<br>
+        교동에 살아온 사람들의 기억을 기록하고, 시민과 함께 활용하여<br>
+        교동의 과거를 <b>미래의 지역자산</b>으로 만들고자 합니다.”
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ QR 인쇄 시트 ============ -->
+  <section class="view" id="view-qr" tabindex="-1" aria-label="QR 인쇄 시트">
+    <div class="sec-head">
+      <h2>현장 부착용 QR</h2>
+      <span class="rule" aria-hidden="true"></span>
+      <span class="label">PRINT SHEET</span>
+    </div>
+    <div class="qr-tools no-print">
+      <button class="btn" id="printBtn">🖨 인쇄하기 (A4)</button>
+      <span class="form-note">티켓을 잘라 각 장소 입구, 눈높이(약 140cm)에 부착하세요. 실외는 코팅 또는 아크릴 스탠드 권장.</span>
+    </div>
+    <div class="qr-grid" id="qrGrid"></div>
+    <div class="card qr-guide no-print" style="margin-top:20px">
+      <span class="label">운영 메모</span>
+      <ul class="tight">
+        <li>QR은 이 페이지의 각 장소 주소를 직접 담고 있어 <b>스캔 즉시 해당 대장</b>이 열립니다.</li>
+        <li>정식 서비스 전환 시 자체 도메인으로 교체 후 QR을 재발급하면 됩니다 (틀은 동일).</li>
+        <li>부착 위치·훼손 여부를 월 1회 점검하고, 스캔 수는 추후 단축링크 통계로 집계합니다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 기억 제보 ============ -->
+  <section class="view" id="view-contribute" tabindex="-1" aria-label="기억 제보">
+    <div class="sec-head">
+      <h2>내가 기억하는 교동</h2>
+      <span class="rule" aria-hidden="true"></span>
+      <span class="label">CONTRIBUTE</span>
+    </div>
+    <div class="card">
+      <p class="prose" style="margin-top:0">
+        교동에서의 기억이 있으신가요? 첫 월급으로 맞춘 양복, 시험 끝나고 사 간 LP 한 장,
+        어머니 손 잡고 걷던 시장 골목 — 시민의 기억이 모여 다음 등재 장소가 됩니다.
+      </p>
+      <form class="c-form" id="cForm">
+        <label for="cName">이름 또는 별명 <span style="color:var(--faint);font-weight:400">(선택)</span></label>
+        <input type="text" id="cName" maxlength="20" placeholder="예: 교동 국민학교 졸업생">
+        <label for="cEra">기억의 연대</label>
+        <select id="cEra">
+          <option>1950–60년대</option><option>1970년대</option><option selected>1980년대</option>
+          <option>1990년대</option><option>2000년대</option><option>2010년대 이후</option>
+        </select>
+        <label for="cPlace">장소 (기억나는 대로)</label>
+        <input type="text" id="cPlace" maxlength="40" placeholder="예: 시장 정문 옆 만화가게">
+        <label for="cText">기억의 내용</label>
+        <textarea id="cText" maxlength="500" required placeholder="그 시절 교동의 장면을 들려주세요."></textarea>
+        <div class="form-foot">
+          <button class="btn seal" type="submit">제보 남기기</button>
+          <span class="form-note">프로토타입: 제보는 지금 이 기기에만 저장됩니다. 정식 서비스에서는 아카이브팀에 전송·검수 후 등재됩니다.</span>
+        </div>
+      </form>
+      <ul class="c-list" id="cList"></ul>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="foot-in">
+    <div>
+      <div class="f-title">교동 기억지도 — 교동의 시간을 기록하다</div>
+      <p>교동 기억 리빙랩 · Team Reboot · 프로토타입 v1<br>
+      본 화면의 상호·인물·인용·연도·거리·좌표는 모두 예시이며, 현장 조사 후 실제 기록으로 교체됩니다.</p>
+    </div>
+    <div class="big-seal" style="width:60px;height:60px;font-size:1rem" aria-hidden="true">記憶<br>地圖</div>
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* ============================================================
+   데이터 — 등재 대장 (전체 예시 데이터: 실제 수집 자료로 교체)
+============================================================ */
+const SPOTS = [
+  {
+    n:1, name:"교동시장 정문", cat:"시장 입구 · 상인회", addr:"대구 중구 교동 777-1 (예시 지번)",
+    open:"1955년 무렵*", era:"1960년대", gone:false,
+    tagline:"전쟁이 끝난 자리에서, 시장이 시작됐습니다",
+    owner:"박○○ 상인회장 (2대째) · 예시 인물",
+    story:[
+      "한국전쟁 직후 피란민과 미군 물자가 만나며 ‘양키시장’이라 불리던 골목에서 출발 (구술 증언, 문헌 확인 예정)",
+      "통조림·초콜릿·군용담요 같은 물건이 대구에서 처음 유통되던 길목",
+      "지금도 새벽이면 그 시절과 같은 순서로 가게들이 문을 연다는 이야기가 전해집니다"
+    ],
+    memory:"아버지는 리어카 하나로 시작했다 캤다. 이 문 열리는 소리가 우리 집 자명종이었지.",
+    objects:[
+      {ic:"🛞", name:"목재 리어카 바퀴", d:"초창기 행상 도구. 상인회 창고에서 보관 중 (예시)"},
+      {ic:"🗺", name:"1960년대 시장 배치도", d:"손으로 그린 점포 배치도 사본 (예시)"},
+      {ic:"📖", name:"초창기 상인회 명부", d:"창립 회원 이름이 적힌 장부 (예시)"}
+    ],
+    scene:{sign:"교동시장", motif:"gate", hue:"#B8452F"}
+  },
+  {
+    n:2, name:"럭키상회", cat:"수입 잡화 · 미제골목", addr:"대구 중구 교동 777-2 (예시 지번)",
+    open:"1962년 (예시)", era:"1970년대", gone:false,
+    tagline:"미제 초콜릿 한 알이 귀하던 시절",
+    owner:"이○○ 사장님 (2대째) · 예시 인물",
+    story:[
+      "미군 부대에서 나온 초콜릿·커피·통조림을 취급하던 수입 잡화점 (예시)",
+      "명절이면 ‘미제 선물세트’를 사러 시내 전역에서 손님이 왔다는 구술",
+      "지금은 수입 과자와 옛 물건을 함께 파는 가게로 이어지고 있습니다 (예시)"
+    ],
+    memory:"군용 초콜릿 한 박스 들어오는 날엔 골목에 줄이 섰어. 아이들 눈이 제일 먼저 알았지.",
+    objects:[
+      {ic:"🥫", name:"빈티지 통조림 캔", d:"1970년대 미제 통조림 공캔 3점 (예시)"},
+      {ic:"⚖️", name:"접시저울", d:"개업 때부터 쓰던 저울, 지금도 작동 (예시)"},
+      {ic:"🧾", name:"외상 장부", d:"단골들의 이름이 남은 손글씨 장부 (예시)"}
+    ],
+    scene:{sign:"럭키상회", motif:"cans", hue:"#3C6E47"}
+  },
+  {
+    n:3, name:"대한전자", cat:"전자·오디오 수리 · 전자골목", addr:"대구 중구 교동 777-3 (예시 지번)",
+    open:"1978년 (예시)", era:"1980년대", gone:false,
+    tagline:"라디오를 고치면 마음도 고쳐졌다",
+    owner:"김○○ 사장님 · 예시 인물",
+    story:[
+      "진공관 라디오부터 전축·워크맨까지, 교동 전자골목의 수리 명가 (예시)",
+      "혼수로 전축을 맞추던 신혼부부들이 골목의 단골 풍경이었다는 구술",
+      "지금도 ‘고쳐 쓰는 물건’을 찾는 손님들이 전국에서 찾아옵니다 (예시)"
+    ],
+    memory:"혼수로 전축 맞추러 오던 신혼부부들, 그 설레는 얼굴로 이 골목이 먹고살았다.",
+    objects:[
+      {ic:"📻", name:"진공관 라디오", d:"수리 후 보관 중인 1960년대 라디오 (예시)"},
+      {ic:"🔧", name:"납땜 인두", d:"40년 넘게 손에 익은 공구 (예시)"},
+      {ic:"🗄", name:"부품 서랍장", d:"수천 종의 부품이 분류된 서랍 (예시)"}
+    ],
+    scene:{sign:"대한전자", motif:"tv", hue:"#2F4F76"}
+  },
+  {
+    n:4, name:"형제금은방", cat:"귀금속 · 귀금속거리", addr:"대구 중구 교동 777-4 (예시 지번)",
+    open:"1981년 (예시)", era:"1980년대", gone:false,
+    tagline:"돌반지의 골목, 3대의 손끝",
+    owner:"최○○ 사장님 (3대째) · 예시 인물",
+    story:[
+      "형과 아우가 나란히 세공을 배워 문을 연 금은방 (예시)",
+      "돌잔치·결혼 예물의 기억이 겹겹이 쌓인 귀금속거리의 터줏대감",
+      "수작업 세공을 지금도 고집하는 몇 안 남은 가게 (예시)"
+    ],
+    memory:"돌반지 한 돈이면 온 가족이 웃던 시절이 있었지. 금값보다 마음값이 먼저였다.",
+    objects:[
+      {ic:"🛠", name:"초창기 세공 도구", d:"개업 때 장만한 수공구 일습 (예시)"},
+      {ic:"💍", name:"반지 원형(몰드)", d:"수십 년 쓰인 돌반지 틀 (예시)"},
+      {ic:"🪧", name:"손글씨 시세판", d:"매일 아침 분필로 적던 금 시세판 (예시)"}
+    ],
+    scene:{sign:"형제금은방", motif:"ring", hue:"#9C8034"}
+  },
+  {
+    n:5, name:"교동레코드", cat:"음반 · LP", addr:"대구 중구 교동 777-5 (예시 지번)",
+    open:"1985년 (예시)", era:"1990년대", gone:false,
+    tagline:"LP 한 장에 청춘이 돌아간다",
+    owner:"정○○ 사장님 · 예시 인물",
+    story:[
+      "가요·팝 LP와 카세트테이프로 골목의 청춘을 책임지던 음반가게 (예시)",
+      "시험 끝난 날 교복 입은 학생들이 줄 서던 풍경의 구술",
+      "LP 붐과 함께 다시 찾아오는 젊은 손님들을 맞고 있습니다 (예시)"
+    ],
+    memory:"시험 끝난 날 교복 입고 와서 한 장씩 사 가던 아이들이, 인자 자식 손 잡고 온다.",
+    objects:[
+      {ic:"💿", name:"1980년대 가요 LP", d:"당시 인기 음반 초판 컬렉션 (예시)"},
+      {ic:"🎚", name:"턴테이블", d:"시청용으로 쓰던 가게 턴테이블 (예시)"},
+      {ic:"📋", name:"손글씨 차트보드", d:"주간 인기 순위를 적던 칠판 (예시)"}
+    ],
+    scene:{sign:"교동레코드", motif:"lp", hue:"#5A3E6E"}
+  },
+  {
+    n:6, name:"할매국밥", cat:"따로국밥 · 먹자골목", addr:"대구 중구 교동 777-6 (예시 지번)",
+    open:"1968년 (예시)", era:"1980년대", gone:false,
+    tagline:"새벽 네 시, 시장보다 먼저 끓는 솥",
+    owner:"강○○ 사장님 (창업주의 딸) · 예시 인물",
+    story:[
+      "새벽 장사꾼들의 속을 데워 온 따로국밥집 (예시)",
+      "‘시장 사람들 밥심이 교동 밥심’이라는 말의 진원지라는 구술",
+      "창업주 할머니의 솥과 국자 그대로, 딸이 불을 잇고 있습니다 (예시)"
+    ],
+    memory:"국물이 먼저 일어나야 시장이 일어난다. 새벽 장사꾼들 속 데운 게 오십 년이다.",
+    objects:[
+      {ic:"🍲", name:"무쇠솥", d:"개업 때부터 쓰는 국솥 (예시)"},
+      {ic:"🥄", name:"나무 국자", d:"손잡이가 닳아 얇아진 국자 (예시)"},
+      {ic:"🪵", name:"개업 당시 간판 조각", d:"화재 때 일부만 남은 첫 간판 (예시)"}
+    ],
+    scene:{sign:"할매국밥", motif:"pot", hue:"#8A4B2D"}
+  },
+  {
+    n:7, name:"신사양복점", cat:"맞춤 양복", addr:"대구 중구 교동 777-7 (예시 지번)",
+    open:"1973년 (예시)", era:"1970년대", gone:false,
+    tagline:"치수보다 사람을 먼저 재던 가게",
+    owner:"오○○ 마스터테일러 · 예시 인물",
+    story:[
+      "첫 월급 양복, 결혼 예복, 환갑 정장 — 인생의 매듭마다 찾던 맞춤 양복점 (예시)",
+      "50년 치 치수 장부가 그대로 남아 있다는 구술",
+      "지금도 가봉 세 번, 손바느질 마감을 지키고 있습니다 (예시)"
+    ],
+    memory:"첫 월급으로 양복 맞추던 청년들 어깨를 내가 다 기억한다. 어깨가 펴지면 인생도 펴진다 캤지.",
+    objects:[
+      {ic:"✂️", name:"재단 가위", d:"수십 년 갈아 쓴 재단 가위 (예시)"},
+      {ic:"📒", name:"치수 장부", d:"단골 3천 명의 치수 기록 (예시)"},
+      {ic:"📏", name:"초크와 자", d:"가봉 표시용 초크, 나무 자 (예시)"}
+    ],
+    scene:{sign:"신사양복점", motif:"suit", hue:"#37536B"}
+  },
+  {
+    n:8, name:"중앙다방", cat:"다방", addr:"대구 중구 교동 777-8 (예시 지번)",
+    open:"1976년 (예시)", era:"1980년대", gone:false,
+    tagline:"계란 노른자 동동, 약속의 장소",
+    owner:"윤○○ 마담 · 예시 인물",
+    story:[
+      "쌍화차에 계란 노른자를 띄워 주던 골목의 사랑방 (예시)",
+      "전화가 귀하던 시절, ‘중앙다방 앞에서 보자’가 만남의 공식이었다는 구술",
+      "벨벳 소파와 자개 테이블이 그 시절 그대로입니다 (예시)"
+    ],
+    memory:"전화가 귀하던 시절엔 여기가 다 사서함이었어. ‘중앙다방 앞에서 보자’가 인사말이었지.",
+    objects:[
+      {ic:"☕", name:"쌍화차 잔", d:"개업 때부터 쓰는 백자 잔 (예시)"},
+      {ic:"🔥", name:"성냥갑 컬렉션", d:"다방 이름이 인쇄된 판촉 성냥 (예시)"},
+      {ic:"📝", name:"쪽지 메모판", d:"손님들이 약속을 남기던 판 (예시)"}
+    ],
+    scene:{sign:"중앙다방", motif:"cup", hue:"#7A3B4F"}
+  },
+  {
+    n:9, name:"교동시계", cat:"시계 수리", addr:"대구 중구 교동 777-9 (예시 지번)",
+    open:"1969년 (예시)", era:"1970년대", gone:false,
+    tagline:"멈춘 시간을 다시 걷게 하는 손",
+    owner:"한○○ 명장 · 예시 인물",
+    story:[
+      "태엽 시계부터 스마트워치 이전까지, 골목의 시간을 지켜 온 시계방 (예시)",
+      "유품 시계를 들고 오는 손님이 유난히 많은 가게라는 구술",
+      "루페 너머 손끝 기술을 배우려는 청년이 최근 문하로 들어왔습니다 (예시)"
+    ],
+    memory:"시계는 멈춰도 버리는 물건이 아니라. 아버지 유품 들고 오는 손님 보면, 내가 고치는 게 시간만은 아니지 싶다.",
+    objects:[
+      {ic:"🔍", name:"루페(확대경)", d:"눈에 끼우는 수리용 확대경 (예시)"},
+      {ic:"⚙️", name:"태엽 부품함", d:"연대별로 분류된 무브먼트 부품 (예시)"},
+      {ic:"🕰", name:"벽시계 컬렉션", d:"수리 후 주인이 찾아가지 않은 시계들 (예시)"}
+    ],
+    scene:{sign:"교동시계", motif:"clock", hue:"#4E5E3A"}
+  },
+  {
+    n:10, name:"옛 교동극장 터", cat:"사라진 공간 · 기록 등재", addr:"대구 중구 교동 777-10 (예시 지번)",
+    open:"1958 개관 · 1999 폐관 (예시)", era:"1970년대", gone:true,
+    tagline:"간판은 내려갔지만, 장면은 남아 있습니다",
+    owner:"인근 상인 공동 구술 · 예시",
+    story:[
+      "40년간 교동의 문화 사랑방이었던 동네 극장 (예시)",
+      "1999년 폐관 후 건물이 철거되어 지금은 주차장 (예시)",
+      "이 QR은 ‘사라진 공간’을 기록하기 위해 빈자리에 섰습니다 — 기억지도의 존재 이유"
+    ],
+    memory:"개봉하는 날엔 골목이 다 극장 앞이었지. 지금도 여기 지나면 매표소 자리부터 눈에 밟힌다.",
+    objects:[
+      {ic:"🎬", name:"상영 전단 (사본)", d:"주민이 보관하던 1970년대 전단 (예시)"},
+      {ic:"💺", name:"좌석 번호판", d:"철거 때 수습된 좌석 번호판 (예시)"},
+      {ic:"🎟", name:"매표소 도장", d:"‘검인’ 도장, 마지막 직원의 기증 (예시)"}
+    ],
+    scene:{sign:"교동극장", motif:"theater", hue:"#6E3A3A"}
+  }
+];
+const LEGS = [120, 90, 150, 80, 200, 60, 110, 140, 170]; // n → n+1 (m, 예시)
+const PIN_XY = [[150,120],[300,120],[470,120],[640,135],[650,300],[640,452],[450,468],[280,458],[150,400],[138,260]];
+const RECORD_DATE = "2026.08 (예시)";
+
+/* QR 코드 SVG — 게시 후 빌드 스크립트가 실제 QR로 채움 */
+const QR_SVGS = {"home": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" shape-rendering=\"crispEdges\" role=\"img\" aria-label=\"QR 코드\"><rect width=\"39\" height=\"39\" fill=\"#FFFFFF\"/><path d=\"M3 3h7v1h-7zM13 3h3v1h-3zM21 3h1v1h-1zM24 3h1v1h-1zM27 3h1v1h-1zM29 3h7v1h-7zM3 4h1v1h-1zM9 4h1v1h-1zM11 4h2v1h-2zM14 4h1v1h-1zM16 4h2v1h-2zM19 4h2v1h-2zM27 4h1v1h-1zM29 4h1v1h-1zM35 4h1v1h-1zM3 5h1v1h-1zM5 5h3v1h-3zM9 5h1v1h-1zM11 5h1v1h-1zM13 5h2v1h-2zM16 5h1v1h-1zM19 5h3v1h-3zM23 5h4v1h-4zM29 5h1v1h-1zM31 5h3v1h-3zM35 5h1v1h-1zM3 6h1v1h-1zM5 6h3v1h-3zM9 6h1v1h-1zM11 6h1v1h-1zM13 6h1v1h-1zM15 6h1v1h-1zM24 6h1v1h-1zM26 6h2v1h-2zM29 6h1v1h-1zM31 6h3v1h-3zM35 6h1v1h-1zM3 7h1v1h-1zM5 7h3v1h-3zM9 7h1v1h-1zM12 7h2v1h-2zM15 7h2v1h-2zM18 7h1v1h-1zM20 7h2v1h-2zM24 7h3v1h-3zM29 7h1v1h-1zM31 7h3v1h-3zM35 7h1v1h-1zM3 8h1v1h-1zM9 8h1v1h-1zM12 8h3v1h-3zM19 8h1v1h-1zM21 8h1v1h-1zM23 8h1v1h-1zM29 8h1v1h-1zM35 8h1v1h-1zM3 9h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM19 9h1v1h-1zM21 9h1v1h-1zM23 9h1v1h-1zM25 9h1v1h-1zM27 9h1v1h-1zM29 9h7v1h-7zM11 10h2v1h-2zM15 10h1v1h-1zM17 10h1v1h-1zM21 10h1v1h-1zM3 11h1v1h-1zM9 11h1v1h-1zM11 11h4v1h-4zM16 11h3v1h-3zM20 11h1v1h-1zM23 11h1v1h-1zM26 11h4v1h-4zM32 11h3v1h-3zM4 12h3v1h-3zM10 12h1v1h-1zM13 12h1v1h-1zM17 12h2v1h-2zM22 12h1v1h-1zM26 12h1v1h-1zM31 12h3v1h-3zM3 13h5v1h-5zM9 13h2v1h-2zM12 13h4v1h-4zM18 13h2v1h-2zM21 13h1v1h-1zM23 13h2v1h-2zM28 13h2v1h-2zM31 13h1v1h-1zM33 13h2v1h-2zM3 14h1v1h-1zM5 14h3v1h-3zM11 14h2v1h-2zM17 14h3v1h-3zM28 14h1v1h-1zM30 14h6v1h-6zM3 15h8v1h-8zM12 15h1v1h-1zM14 15h1v1h-1zM16 15h2v1h-2zM19 15h3v1h-3zM23 15h1v1h-1zM25 15h3v1h-3zM29 15h2v1h-2zM4 16h1v1h-1zM6 16h3v1h-3zM10 16h2v1h-2zM15 16h3v1h-3zM19 16h1v1h-1zM23 16h1v1h-1zM26 16h1v1h-1zM29 16h2v1h-2zM32 16h1v1h-1zM34 16h2v1h-2zM3 17h4v1h-4zM8 17h4v1h-4zM13 17h2v1h-2zM16 17h2v1h-2zM22 17h1v1h-1zM24 17h1v1h-1zM28 17h2v1h-2zM34 17h1v1h-1zM3 18h3v1h-3zM7 18h1v1h-1zM12 18h7v1h-7zM22 18h1v1h-1zM25 18h1v1h-1zM28 18h1v1h-1zM30 18h4v1h-4zM35 18h1v1h-1zM5 19h1v1h-1zM8 19h2v1h-2zM11 19h1v1h-1zM14 19h2v1h-2zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h1v1h-1zM26 19h1v1h-1zM28 19h1v1h-1zM30 19h2v1h-2zM35 19h1v1h-1zM4 20h3v1h-3zM8 20h1v1h-1zM13 20h3v1h-3zM17 20h2v1h-2zM20 20h7v1h-7zM29 20h1v1h-1zM32 20h2v1h-2zM35 20h1v1h-1zM3 21h3v1h-3zM9 21h1v1h-1zM11 21h1v1h-1zM14 21h3v1h-3zM18 21h1v1h-1zM22 21h1v1h-1zM26 21h2v1h-2zM30 21h1v1h-1zM32 21h2v1h-2zM35 21h1v1h-1zM3 22h1v1h-1zM7 22h2v1h-2zM13 22h1v1h-1zM17 22h7v1h-7zM25 22h1v1h-1zM27 22h3v1h-3zM31 22h3v1h-3zM6 23h1v1h-1zM8 23h2v1h-2zM11 23h2v1h-2zM14 23h3v1h-3zM19 23h1v1h-1zM23 23h2v1h-2zM26 23h3v1h-3zM30 23h3v1h-3zM34 23h1v1h-1zM3 24h1v1h-1zM10 24h1v1h-1zM12 24h1v1h-1zM16 24h1v1h-1zM19 24h1v1h-1zM21 24h1v1h-1zM23 24h1v1h-1zM25 24h4v1h-4zM30 24h4v1h-4zM3 25h1v1h-1zM6 25h2v1h-2zM9 25h3v1h-3zM13 25h1v1h-1zM15 25h1v1h-1zM18 25h4v1h-4zM23 25h2v1h-2zM29 25h1v1h-1zM32 25h1v1h-1zM34 25h1v1h-1zM3 26h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM10 26h7v1h-7zM21 26h1v1h-1zM27 26h1v1h-1zM29 26h3v1h-3zM33 26h3v1h-3zM3 27h2v1h-2zM6 27h1v1h-1zM8 27h4v1h-4zM13 27h1v1h-1zM16 27h4v1h-4zM21 27h3v1h-3zM25 27h1v1h-1zM27 27h6v1h-6zM11 28h1v1h-1zM14 28h2v1h-2zM17 28h3v1h-3zM21 28h3v1h-3zM25 28h1v1h-1zM27 28h1v1h-1zM31 28h1v1h-1zM33 28h1v1h-1zM35 28h1v1h-1zM3 29h7v1h-7zM12 29h1v1h-1zM14 29h2v1h-2zM17 29h3v1h-3zM21 29h1v1h-1zM24 29h1v1h-1zM26 29h2v1h-2zM29 29h1v1h-1zM31 29h1v1h-1zM33 29h2v1h-2zM3 30h1v1h-1zM9 30h1v1h-1zM12 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM22 30h1v1h-1zM25 30h3v1h-3zM31 30h4v1h-4zM3 31h1v1h-1zM5 31h3v1h-3zM9 31h1v1h-1zM13 31h2v1h-2zM16 31h2v1h-2zM21 31h2v1h-2zM24 31h1v1h-1zM27 31h6v1h-6zM34 31h2v1h-2zM3 32h1v1h-1zM5 32h3v1h-3zM9 32h1v1h-1zM14 32h4v1h-4zM19 32h2v1h-2zM23 32h1v1h-1zM26 32h3v1h-3zM30 32h3v1h-3zM35 32h1v1h-1zM3 33h1v1h-1zM5 33h3v1h-3zM9 33h1v1h-1zM15 33h2v1h-2zM19 33h1v1h-1zM23 33h4v1h-4zM28 33h1v1h-1zM30 33h2v1h-2zM33 33h3v1h-3zM3 34h1v1h-1zM9 34h1v1h-1zM12 34h3v1h-3zM18 34h2v1h-2zM21 34h3v1h-3zM26 34h1v1h-1zM30 34h4v1h-4zM3 35h7v1h-7zM11 35h1v1h-1zM13 35h2v1h-2zM16 35h2v1h-2zM20 35h1v1h-1zM22 35h1v1h-1zM26 35h2v1h-2zM29 35h2v1h-2zM34 35h1v1h-1z\" fill=\"#151310\"/></svg>", "1": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" shape-rendering=\"crispEdges\" role=\"img\" aria-label=\"QR 코드\"><rect width=\"39\" height=\"39\" fill=\"#FFFFFF\"/><path d=\"M3 3h7v1h-7zM13 3h1v1h-1zM16 3h1v1h-1zM18 3h1v1h-1zM21 3h2v1h-2zM26 3h2v1h-2zM29 3h7v1h-7zM3 4h1v1h-1zM9 4h1v1h-1zM15 4h4v1h-4zM20 4h2v1h-2zM24 4h3v1h-3zM29 4h1v1h-1zM35 4h1v1h-1zM3 5h1v1h-1zM5 5h3v1h-3zM9 5h1v1h-1zM12 5h5v1h-5zM18 5h1v1h-1zM20 5h2v1h-2zM23 5h1v1h-1zM29 5h1v1h-1zM31 5h3v1h-3zM35 5h1v1h-1zM3 6h1v1h-1zM5 6h3v1h-3zM9 6h1v1h-1zM12 6h1v1h-1zM15 6h5v1h-5zM22 6h2v1h-2zM25 6h1v1h-1zM29 6h1v1h-1zM31 6h3v1h-3zM35 6h1v1h-1zM3 7h1v1h-1zM5 7h3v1h-3zM9 7h1v1h-1zM15 7h1v1h-1zM17 7h1v1h-1zM20 7h2v1h-2zM25 7h2v1h-2zM29 7h1v1h-1zM31 7h3v1h-3zM35 7h1v1h-1zM3 8h1v1h-1zM9 8h1v1h-1zM11 8h4v1h-4zM16 8h4v1h-4zM22 8h1v1h-1zM24 8h1v1h-1zM27 8h1v1h-1zM29 8h1v1h-1zM35 8h1v1h-1zM3 9h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM19 9h1v1h-1zM21 9h1v1h-1zM23 9h1v1h-1zM25 9h1v1h-1zM27 9h1v1h-1zM29 9h7v1h-7zM12 10h1v1h-1zM14 10h1v1h-1zM17 10h4v1h-4zM22 10h6v1h-6zM3 11h1v1h-1zM6 11h1v1h-1zM8 11h2v1h-2zM11 11h3v1h-3zM15 11h3v1h-3zM19 11h1v1h-1zM22 11h4v1h-4zM27 11h2v1h-2zM30 11h1v1h-1zM3 12h2v1h-2zM6 12h3v1h-3zM10 12h1v1h-1zM13 12h1v1h-1zM16 12h1v1h-1zM19 12h1v1h-1zM21 12h1v1h-1zM23 12h3v1h-3zM27 12h4v1h-4zM34 12h2v1h-2zM4 13h2v1h-2zM9 13h4v1h-4zM16 13h2v1h-2zM19 13h2v1h-2zM22 13h1v1h-1zM30 13h2v1h-2zM33 13h1v1h-1zM35 13h1v1h-1zM4 14h1v1h-1zM6 14h3v1h-3zM12 14h2v1h-2zM15 14h2v1h-2zM19 14h1v1h-1zM21 14h4v1h-4zM27 14h1v1h-1zM29 14h1v1h-1zM31 14h2v1h-2zM5 15h1v1h-1zM7 15h1v1h-1zM9 15h4v1h-4zM14 15h2v1h-2zM17 15h9v1h-9zM27 15h3v1h-3zM32 15h1v1h-1zM34 15h1v1h-1zM3 16h2v1h-2zM6 16h2v1h-2zM14 16h5v1h-5zM20 16h6v1h-6zM27 16h1v1h-1zM29 16h1v1h-1zM31 16h1v1h-1zM33 16h3v1h-3zM3 17h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM9 17h12v1h-12zM25 17h2v1h-2zM28 17h5v1h-5zM34 17h1v1h-1zM3 18h1v1h-1zM8 18h1v1h-1zM13 18h5v1h-5zM19 18h4v1h-4zM24 18h1v1h-1zM26 18h2v1h-2zM29 18h1v1h-1zM34 18h1v1h-1zM5 19h1v1h-1zM7 19h1v1h-1zM9 19h1v1h-1zM12 19h2v1h-2zM17 19h2v1h-2zM20 19h1v1h-1zM22 19h3v1h-3zM26 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM34 19h1v1h-1zM3 20h1v1h-1zM7 20h1v1h-1zM11 20h2v1h-2zM25 20h4v1h-4zM30 20h1v1h-1zM32 20h1v1h-1zM34 20h1v1h-1zM4 21h8v1h-8zM14 21h1v1h-1zM17 21h1v1h-1zM21 21h1v1h-1zM24 21h1v1h-1zM27 21h2v1h-2zM33 21h3v1h-3zM6 22h1v1h-1zM8 22h1v1h-1zM12 22h6v1h-6zM20 22h5v1h-5zM26 22h1v1h-1zM28 22h3v1h-3zM3 23h5v1h-5zM9 23h4v1h-4zM14 23h1v1h-1zM16 23h1v1h-1zM18 23h1v1h-1zM20 23h2v1h-2zM23 23h3v1h-3zM27 23h2v1h-2zM34 23h1v1h-1zM4 24h2v1h-2zM8 24h1v1h-1zM12 24h1v1h-1zM14 24h2v1h-2zM18 24h1v1h-1zM20 24h1v1h-1zM23 24h2v1h-2zM29 24h1v1h-1zM34 24h2v1h-2zM3 25h2v1h-2zM6 25h7v1h-7zM15 25h3v1h-3zM19 25h4v1h-4zM28 25h1v1h-1zM30 25h1v1h-1zM32 25h1v1h-1zM35 25h1v1h-1zM4 26h2v1h-2zM7 26h1v1h-1zM10 26h1v1h-1zM14 26h1v1h-1zM17 26h2v1h-2zM23 26h2v1h-2zM28 26h1v1h-1zM31 26h1v1h-1zM3 27h1v1h-1zM5 27h5v1h-5zM12 27h1v1h-1zM14 27h1v1h-1zM16 27h1v1h-1zM19 27h3v1h-3zM23 27h9v1h-9zM34 27h2v1h-2zM11 28h3v1h-3zM15 28h2v1h-2zM20 28h1v1h-1zM22 28h3v1h-3zM26 28h2v1h-2zM31 28h2v1h-2zM35 28h1v1h-1zM3 29h7v1h-7zM13 29h3v1h-3zM20 29h2v1h-2zM24 29h2v1h-2zM27 29h1v1h-1zM29 29h1v1h-1zM31 29h4v1h-4zM3 30h1v1h-1zM9 30h1v1h-1zM11 30h1v1h-1zM13 30h1v1h-1zM15 30h1v1h-1zM17 30h2v1h-2zM20 30h1v1h-1zM23 30h3v1h-3zM27 30h1v1h-1zM31 30h1v1h-1zM35 30h1v1h-1zM3 31h1v1h-1zM5 31h3v1h-3zM9 31h1v1h-1zM12 31h1v1h-1zM15 31h2v1h-2zM18 31h1v1h-1zM21 31h1v1h-1zM24 31h1v1h-1zM27 31h6v1h-6zM3 32h1v1h-1zM5 32h3v1h-3zM9 32h1v1h-1zM11 32h2v1h-2zM14 32h1v1h-1zM18 32h3v1h-3zM24 32h1v1h-1zM26 32h1v1h-1zM29 32h1v1h-1zM31 32h3v1h-3zM3 33h1v1h-1zM5 33h3v1h-3zM9 33h1v1h-1zM13 33h2v1h-2zM16 33h5v1h-5zM25 33h1v1h-1zM31 33h3v1h-3zM35 33h1v1h-1zM3 34h1v1h-1zM9 34h1v1h-1zM16 34h2v1h-2zM20 34h1v1h-1zM22 34h4v1h-4zM27 34h1v1h-1zM3 35h7v1h-7zM11 35h2v1h-2zM15 35h1v1h-1zM18 35h2v1h-2zM22 35h1v1h-1zM24 35h2v1h-2zM27 35h1v1h-1zM29 35h1v1h-1zM31 35h2v1h-2zM34 35h1v1h-1z\" fill=\"#151310\"/></svg>", "2": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" shape-rendering=\"crispEdges\" role=\"img\" aria-label=\"QR 코드\"><rect width=\"39\" height=\"39\" fill=\"#FFFFFF\"/><path d=\"M3 3h7v1h-7zM11 3h4v1h-4zM20 3h2v1h-2zM24 3h1v1h-1zM27 3h1v1h-1zM29 3h7v1h-7zM3 4h1v1h-1zM9 4h1v1h-1zM11 4h4v1h-4zM19 4h1v1h-1zM22 4h2v1h-2zM27 4h1v1h-1zM29 4h1v1h-1zM35 4h1v1h-1zM3 5h1v1h-1zM5 5h3v1h-3zM9 5h1v1h-1zM11 5h1v1h-1zM13 5h1v1h-1zM15 5h1v1h-1zM21 5h4v1h-4zM26 5h1v1h-1zM29 5h1v1h-1zM31 5h3v1h-3zM35 5h1v1h-1zM3 6h1v1h-1zM5 6h3v1h-3zM9 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM20 6h2v1h-2zM24 6h1v1h-1zM26 6h2v1h-2zM29 6h1v1h-1zM31 6h3v1h-3zM35 6h1v1h-1zM3 7h1v1h-1zM5 7h3v1h-3zM9 7h1v1h-1zM11 7h2v1h-2zM15 7h4v1h-4zM21 7h2v1h-2zM24 7h2v1h-2zM29 7h1v1h-1zM31 7h3v1h-3zM35 7h1v1h-1zM3 8h1v1h-1zM9 8h1v1h-1zM15 8h1v1h-1zM20 8h2v1h-2zM23 8h1v1h-1zM25 8h2v1h-2zM29 8h1v1h-1zM35 8h1v1h-1zM3 9h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM19 9h1v1h-1zM21 9h1v1h-1zM23 9h1v1h-1zM25 9h1v1h-1zM27 9h1v1h-1zM29 9h7v1h-7zM13 10h4v1h-4zM21 10h1v1h-1zM3 11h1v1h-1zM6 11h6v1h-6zM13 11h1v1h-1zM15 11h1v1h-1zM17 11h4v1h-4zM23 11h1v1h-1zM25 11h4v1h-4zM31 11h1v1h-1zM33 11h3v1h-3zM5 12h1v1h-1zM7 12h1v1h-1zM11 12h2v1h-2zM14 12h2v1h-2zM17 12h2v1h-2zM20 12h1v1h-1zM22 12h1v1h-1zM26 12h1v1h-1zM31 12h3v1h-3zM3 13h1v1h-1zM5 13h2v1h-2zM8 13h2v1h-2zM11 13h1v1h-1zM13 13h2v1h-2zM17 13h3v1h-3zM24 13h1v1h-1zM26 13h1v1h-1zM28 13h1v1h-1zM31 13h5v1h-5zM3 14h3v1h-3zM7 14h1v1h-1zM10 14h2v1h-2zM14 14h1v1h-1zM17 14h2v1h-2zM20 14h1v1h-1zM25 14h2v1h-2zM28 14h1v1h-1zM30 14h1v1h-1zM33 14h3v1h-3zM3 15h1v1h-1zM5 15h5v1h-5zM11 15h1v1h-1zM13 15h1v1h-1zM16 15h2v1h-2zM19 15h1v1h-1zM21 15h1v1h-1zM23 15h1v1h-1zM25 15h3v1h-3zM29 15h2v1h-2zM4 16h1v1h-1zM10 16h6v1h-6zM19 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h1v1h-1zM32 16h1v1h-1zM3 17h7v1h-7zM11 17h1v1h-1zM13 17h3v1h-3zM17 17h1v1h-1zM19 17h1v1h-1zM22 17h1v1h-1zM24 17h2v1h-2zM29 17h1v1h-1zM31 17h1v1h-1zM4 18h2v1h-2zM7 18h1v1h-1zM12 18h1v1h-1zM14 18h2v1h-2zM18 18h1v1h-1zM23 18h1v1h-1zM25 18h1v1h-1zM28 18h1v1h-1zM30 18h4v1h-4zM35 18h1v1h-1zM4 19h1v1h-1zM6 19h4v1h-4zM13 19h1v1h-1zM16 19h2v1h-2zM23 19h1v1h-1zM28 19h5v1h-5zM3 20h6v1h-6zM10 20h1v1h-1zM12 20h4v1h-4zM17 20h8v1h-8zM29 20h1v1h-1zM31 20h1v1h-1zM33 20h1v1h-1zM35 20h1v1h-1zM4 21h2v1h-2zM9 21h1v1h-1zM11 21h2v1h-2zM17 21h2v1h-2zM21 21h2v1h-2zM26 21h2v1h-2zM30 21h1v1h-1zM32 21h2v1h-2zM35 21h1v1h-1zM3 22h1v1h-1zM5 22h1v1h-1zM7 22h2v1h-2zM10 22h3v1h-3zM16 22h4v1h-4zM21 22h1v1h-1zM25 22h1v1h-1zM27 22h1v1h-1zM31 22h5v1h-5zM3 23h3v1h-3zM9 23h1v1h-1zM21 23h3v1h-3zM25 23h3v1h-3zM30 23h1v1h-1zM32 23h1v1h-1zM3 24h2v1h-2zM6 24h3v1h-3zM11 24h1v1h-1zM14 24h1v1h-1zM16 24h1v1h-1zM19 24h1v1h-1zM21 24h2v1h-2zM25 24h4v1h-4zM30 24h4v1h-4zM3 25h1v1h-1zM5 25h3v1h-3zM9 25h2v1h-2zM14 25h1v1h-1zM17 25h3v1h-3zM21 25h1v1h-1zM24 25h1v1h-1zM26 25h1v1h-1zM34 25h2v1h-2zM3 26h1v1h-1zM5 26h1v1h-1zM8 26h1v1h-1zM12 26h2v1h-2zM15 26h2v1h-2zM19 26h4v1h-4zM25 26h3v1h-3zM29 26h2v1h-2zM32 26h4v1h-4zM3 27h3v1h-3zM7 27h1v1h-1zM9 27h1v1h-1zM18 27h2v1h-2zM21 27h3v1h-3zM25 27h1v1h-1zM27 27h6v1h-6zM35 27h1v1h-1zM11 28h2v1h-2zM14 28h1v1h-1zM16 28h4v1h-4zM21 28h1v1h-1zM25 28h1v1h-1zM27 28h1v1h-1zM31 28h1v1h-1zM33 28h2v1h-2zM3 29h7v1h-7zM11 29h1v1h-1zM15 29h2v1h-2zM18 29h1v1h-1zM21 29h2v1h-2zM25 29h3v1h-3zM29 29h1v1h-1zM31 29h1v1h-1zM33 29h1v1h-1zM3 30h1v1h-1zM9 30h1v1h-1zM11 30h2v1h-2zM14 30h1v1h-1zM16 30h2v1h-2zM19 30h1v1h-1zM21 30h2v1h-2zM26 30h2v1h-2zM31 30h4v1h-4zM3 31h1v1h-1zM5 31h3v1h-3zM9 31h1v1h-1zM11 31h4v1h-4zM17 31h1v1h-1zM20 31h3v1h-3zM26 31h6v1h-6zM34 31h1v1h-1zM3 32h1v1h-1zM5 32h3v1h-3zM9 32h1v1h-1zM11 32h1v1h-1zM13 32h4v1h-4zM21 32h3v1h-3zM25 32h1v1h-1zM27 32h2v1h-2zM30 32h1v1h-1zM34 32h2v1h-2zM3 33h1v1h-1zM5 33h3v1h-3zM9 33h1v1h-1zM12 33h2v1h-2zM15 33h1v1h-1zM17 33h1v1h-1zM19 33h1v1h-1zM22 33h1v1h-1zM24 33h3v1h-3zM28 33h1v1h-1zM30 33h2v1h-2zM33 33h3v1h-3zM3 34h1v1h-1zM9 34h1v1h-1zM12 34h2v1h-2zM15 34h1v1h-1zM18 34h2v1h-2zM21 34h1v1h-1zM26 34h1v1h-1zM28 34h8v1h-8zM3 35h7v1h-7zM11 35h1v1h-1zM14 35h3v1h-3zM19 35h2v1h-2zM25 35h7v1h-7z\" fill=\"#151310\"/></svg>", "3": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" shape-rendering=\"crispEdges\" role=\"img\" aria-label=\"QR 코드\"><rect width=\"39\" height=\"39\" fill=\"#FFFFFF\"/><path d=\"M3 3h7v1h-7zM11 3h1v1h-1zM18 3h2v1h-2zM21 3h1v1h-1zM25 3h3v1h-3zM29 3h7v1h-7zM3 4h1v1h-1zM9 4h1v1h-1zM12 4h3v1h-3zM19 4h1v1h-1zM22 4h2v1h-2zM27 4h1v1h-1zM29 4h1v1h-1zM35 4h1v1h-1zM3 5h1v1h-1zM5 5h3v1h-3zM9 5h1v1h-1zM13 5h2v1h-2zM16 5h1v1h-1zM20 5h1v1h-1zM23 5h2v1h-2zM27 5h1v1h-1zM29 5h1v1h-1zM31 5h3v1h-3zM35 5h1v1h-1zM3 6h1v1h-1zM5 6h3v1h-3zM9 6h1v1h-1zM11 6h2v1h-2zM17 6h2v1h-2zM23 6h1v1h-1zM29 6h1v1h-1zM31 6h3v1h-3zM35 6h1v1h-1zM3 7h1v1h-1zM5 7h3v1h-3zM9 7h1v1h-1zM11 7h1v1h-1zM14 7h1v1h-1zM17 7h1v1h-1zM20 7h2v1h-2zM25 7h2v1h-2zM29 7h1v1h-1zM31 7h3v1h-3zM35 7h1v1h-1zM3 8h1v1h-1zM9 8h1v1h-1zM11 8h1v1h-1zM13 8h2v1h-2zM16 8h2v1h-2zM19 8h1v1h-1zM21 8h2v1h-2zM29 8h1v1h-1zM35 8h1v1h-1zM3 9h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM19 9h1v1h-1zM21 9h1v1h-1zM23 9h1v1h-1zM25 9h1v1h-1zM27 9h1v1h-1zM29 9h7v1h-7zM11 10h2v1h-2zM17 10h4v1h-4zM22 10h6v1h-6zM3 11h1v1h-1zM7 11h1v1h-1zM9 11h4v1h-4zM14 11h2v1h-2zM20 11h1v1h-1zM24 11h1v1h-1zM26 11h7v1h-7zM35 11h1v1h-1zM3 12h3v1h-3zM7 12h1v1h-1zM10 12h11v1h-11zM25 12h2v1h-2zM28 12h1v1h-1zM32 12h3v1h-3zM3 13h2v1h-2zM6 13h4v1h-4zM12 13h1v1h-1zM14 13h2v1h-2zM18 13h1v1h-1zM21 13h1v1h-1zM23 13h7v1h-7zM32 13h1v1h-1zM34 13h1v1h-1zM4 14h3v1h-3zM10 14h2v1h-2zM13 14h3v1h-3zM17 14h1v1h-1zM20 14h2v1h-2zM24 14h5v1h-5zM34 14h2v1h-2zM4 15h3v1h-3zM8 15h2v1h-2zM12 15h3v1h-3zM16 15h3v1h-3zM20 15h2v1h-2zM23 15h2v1h-2zM27 15h1v1h-1zM29 15h1v1h-1zM31 15h2v1h-2zM4 16h1v1h-1zM6 16h1v1h-1zM11 16h3v1h-3zM19 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h1v1h-1zM32 16h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM11 17h1v1h-1zM13 17h2v1h-2zM16 17h2v1h-2zM19 17h3v1h-3zM24 17h6v1h-6zM31 17h4v1h-4zM3 18h6v1h-6zM10 18h2v1h-2zM14 18h1v1h-1zM17 18h1v1h-1zM20 18h2v1h-2zM24 18h6v1h-6zM31 18h1v1h-1zM5 19h1v1h-1zM7 19h1v1h-1zM9 19h1v1h-1zM12 19h2v1h-2zM17 19h2v1h-2zM20 19h1v1h-1zM22 19h3v1h-3zM26 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM34 19h1v1h-1zM6 20h1v1h-1zM11 20h1v1h-1zM15 20h1v1h-1zM18 20h1v1h-1zM21 20h1v1h-1zM24 20h3v1h-3zM28 20h1v1h-1zM32 20h3v1h-3zM7 21h4v1h-4zM12 21h1v1h-1zM15 21h2v1h-2zM18 21h1v1h-1zM23 21h1v1h-1zM26 21h1v1h-1zM28 21h3v1h-3zM32 21h1v1h-1zM34 21h1v1h-1zM3 22h1v1h-1zM6 22h2v1h-2zM12 22h6v1h-6zM20 22h5v1h-5zM26 22h1v1h-1zM28 22h3v1h-3zM3 23h2v1h-2zM6 23h4v1h-4zM12 23h1v1h-1zM18 23h2v1h-2zM21 23h2v1h-2zM24 23h1v1h-1zM26 23h2v1h-2zM29 23h1v1h-1zM31 23h2v1h-2zM35 23h1v1h-1zM3 24h1v1h-1zM6 24h1v1h-1zM10 24h2v1h-2zM13 24h1v1h-1zM15 24h1v1h-1zM21 24h1v1h-1zM26 24h2v1h-2zM30 24h1v1h-1zM32 24h3v1h-3zM5 25h2v1h-2zM9 25h1v1h-1zM11 25h1v1h-1zM13 25h1v1h-1zM15 25h1v1h-1zM18 25h1v1h-1zM23 25h5v1h-5zM29 25h1v1h-1zM31 25h1v1h-1zM33 25h2v1h-2zM6 26h1v1h-1zM8 26h1v1h-1zM11 26h1v1h-1zM13 26h1v1h-1zM16 26h1v1h-1zM18 26h3v1h-3zM22 26h1v1h-1zM24 26h3v1h-3zM29 26h1v1h-1zM32 26h1v1h-1zM34 26h2v1h-2zM3 27h4v1h-4zM8 27h2v1h-2zM12 27h3v1h-3zM20 27h5v1h-5zM26 27h6v1h-6zM35 27h1v1h-1zM11 28h1v1h-1zM14 28h1v1h-1zM16 28h4v1h-4zM21 28h1v1h-1zM25 28h1v1h-1zM27 28h1v1h-1zM31 28h1v1h-1zM33 28h2v1h-2zM3 29h7v1h-7zM11 29h2v1h-2zM14 29h1v1h-1zM16 29h3v1h-3zM20 29h1v1h-1zM25 29h1v1h-1zM27 29h1v1h-1zM29 29h1v1h-1zM31 29h2v1h-2zM34 29h1v1h-1zM3 30h1v1h-1zM9 30h1v1h-1zM12 30h1v1h-1zM15 30h6v1h-6zM22 30h3v1h-3zM27 30h1v1h-1zM31 30h1v1h-1zM34 30h2v1h-2zM3 31h1v1h-1zM5 31h3v1h-3zM9 31h1v1h-1zM11 31h1v1h-1zM13 31h1v1h-1zM15 31h1v1h-1zM17 31h2v1h-2zM21 31h1v1h-1zM24 31h1v1h-1zM27 31h6v1h-6zM3 32h1v1h-1zM5 32h3v1h-3zM9 32h1v1h-1zM13 32h1v1h-1zM15 32h1v1h-1zM19 32h3v1h-3zM26 32h2v1h-2zM29 32h4v1h-4zM3 33h1v1h-1zM5 33h3v1h-3zM9 33h1v1h-1zM12 33h2v1h-2zM15 33h2v1h-2zM19 33h1v1h-1zM21 33h1v1h-1zM23 33h5v1h-5zM29 33h3v1h-3zM3 34h1v1h-1zM9 34h1v1h-1zM14 34h1v1h-1zM16 34h2v1h-2zM20 34h1v1h-1zM22 34h4v1h-4zM27 34h1v1h-1zM3 35h7v1h-7zM11 35h8v1h-8zM20 35h1v1h-1zM23 35h2v1h-2zM26 35h3v1h-3zM35 35h1v1h-1z\" fill=\"#151310\"/></svg>", "4": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" shape-rendering=\"crispEdges\" role=\"img\" aria-label=\"QR 코드\"><rect width=\"39\" height=\"39\" fill=\"#FFFFFF\"/><path d=\"M3 3h7v1h-7zM11 3h4v1h-4zM20 3h2v1h-2zM24 3h1v1h-1zM27 3h1v1h-1zM29 3h7v1h-7zM3 4h1v1h-1zM9 4h1v1h-1zM11 4h4v1h-4zM19 4h1v1h-1zM22 4h2v1h-2zM27 4h1v1h-1zM29 4h1v1h-1zM35 4h1v1h-1zM3 5h1v1h-1zM5 5h3v1h-3zM9 5h1v1h-1zM11 5h3v1h-3zM15 5h1v1h-1zM21 5h4v1h-4zM26 5h1v1h-1zM29 5h1v1h-1zM31 5h3v1h-3zM35 5h1v1h-1zM3 6h1v1h-1zM5 6h3v1h-3zM9 6h1v1h-1zM12 6h4v1h-4zM20 6h2v1h-2zM24 6h1v1h-1zM26 6h2v1h-2zM29 6h1v1h-1zM31 6h3v1h-3zM35 6h1v1h-1zM3 7h1v1h-1zM5 7h3v1h-3zM9 7h1v1h-1zM11 7h2v1h-2zM15 7h4v1h-4zM21 7h2v1h-2zM24 7h2v1h-2zM29 7h1v1h-1zM31 7h3v1h-3zM35 7h1v1h-1zM3 8h1v1h-1zM9 8h1v1h-1zM14 8h1v1h-1zM20 8h2v1h-2zM23 8h1v1h-1zM25 8h2v1h-2zM29 8h1v1h-1zM35 8h1v1h-1zM3 9h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM19 9h1v1h-1zM21 9h1v1h-1zM23 9h1v1h-1zM25 9h1v1h-1zM27 9h1v1h-1zM29 9h7v1h-7zM13 10h2v1h-2zM16 10h1v1h-1zM21 10h1v1h-1zM3 11h1v1h-1zM6 11h6v1h-6zM13 11h1v1h-1zM15 11h1v1h-1zM17 11h4v1h-4zM23 11h1v1h-1zM25 11h4v1h-4zM31 11h1v1h-1zM33 11h3v1h-3zM5 12h1v1h-1zM7 12h1v1h-1zM11 12h1v1h-1zM14 12h2v1h-2zM17 12h2v1h-2zM20 12h1v1h-1zM22 12h1v1h-1zM26 12h1v1h-1zM31 12h3v1h-3zM4 13h3v1h-3zM8 13h2v1h-2zM11 13h1v1h-1zM13 13h2v1h-2zM17 13h3v1h-3zM24 13h1v1h-1zM26 13h1v1h-1zM28 13h1v1h-1zM31 13h5v1h-5zM4 14h2v1h-2zM10 14h3v1h-3zM14 14h1v1h-1zM17 14h2v1h-2zM20 14h1v1h-1zM25 14h2v1h-2zM28 14h1v1h-1zM30 14h1v1h-1zM33 14h3v1h-3zM4 15h2v1h-2zM9 15h1v1h-1zM13 15h1v1h-1zM15 15h3v1h-3zM19 15h1v1h-1zM21 15h1v1h-1zM23 15h1v1h-1zM25 15h3v1h-3zM29 15h2v1h-2zM4 16h1v1h-1zM8 16h1v1h-1zM10 16h1v1h-1zM12 16h2v1h-2zM15 16h1v1h-1zM19 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h1v1h-1zM32 16h1v1h-1zM3 17h2v1h-2zM7 17h4v1h-4zM13 17h3v1h-3zM17 17h1v1h-1zM19 17h1v1h-1zM22 17h1v1h-1zM24 17h2v1h-2zM29 17h1v1h-1zM31 17h1v1h-1zM4 18h2v1h-2zM7 18h1v1h-1zM11 18h2v1h-2zM14 18h1v1h-1zM18 18h1v1h-1zM23 18h1v1h-1zM25 18h1v1h-1zM28 18h1v1h-1zM30 18h4v1h-4zM35 18h1v1h-1zM4 19h7v1h-7zM13 19h2v1h-2zM16 19h2v1h-2zM23 19h1v1h-1zM28 19h5v1h-5zM4 20h5v1h-5zM10 20h1v1h-1zM12 20h4v1h-4zM17 20h8v1h-8zM29 20h1v1h-1zM31 20h1v1h-1zM33 20h1v1h-1zM35 20h1v1h-1zM3 21h3v1h-3zM7 21h3v1h-3zM11 21h2v1h-2zM16 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM22 21h1v1h-1zM26 21h2v1h-2zM30 21h1v1h-1zM32 21h2v1h-2zM35 21h1v1h-1zM3 22h3v1h-3zM7 22h1v1h-1zM10 22h2v1h-2zM17 22h3v1h-3zM21 22h1v1h-1zM25 22h1v1h-1zM27 22h1v1h-1zM31 22h5v1h-5zM5 23h1v1h-1zM7 23h1v1h-1zM9 23h1v1h-1zM11 23h3v1h-3zM16 23h2v1h-2zM21 23h3v1h-3zM25 23h3v1h-3zM30 23h1v1h-1zM32 23h1v1h-1zM3 24h1v1h-1zM6 24h2v1h-2zM10 24h2v1h-2zM13 24h5v1h-5zM19 24h1v1h-1zM21 24h2v1h-2zM25 24h4v1h-4zM30 24h4v1h-4zM3 25h1v1h-1zM5 25h1v1h-1zM7 25h1v1h-1zM9 25h1v1h-1zM14 25h1v1h-1zM17 25h3v1h-3zM21 25h1v1h-1zM24 25h1v1h-1zM26 25h1v1h-1zM34 25h2v1h-2zM3 26h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM12 26h5v1h-5zM19 26h4v1h-4zM25 26h3v1h-3zM29 26h2v1h-2zM32 26h4v1h-4zM3 27h2v1h-2zM7 27h1v1h-1zM9 27h2v1h-2zM18 27h2v1h-2zM21 27h3v1h-3zM25 27h1v1h-1zM27 27h6v1h-6zM35 27h1v1h-1zM11 28h1v1h-1zM14 28h1v1h-1zM16 28h4v1h-4zM21 28h1v1h-1zM25 28h1v1h-1zM27 28h1v1h-1zM31 28h1v1h-1zM33 28h2v1h-2zM3 29h7v1h-7zM11 29h1v1h-1zM13 29h1v1h-1zM15 29h1v1h-1zM18 29h1v1h-1zM21 29h2v1h-2zM25 29h3v1h-3zM29 29h1v1h-1zM31 29h1v1h-1zM33 29h1v1h-1zM3 30h1v1h-1zM9 30h1v1h-1zM11 30h4v1h-4zM16 30h1v1h-1zM19 30h1v1h-1zM21 30h2v1h-2zM26 30h2v1h-2zM31 30h4v1h-4zM3 31h1v1h-1zM5 31h3v1h-3zM9 31h1v1h-1zM11 31h4v1h-4zM16 31h1v1h-1zM20 31h3v1h-3zM26 31h6v1h-6zM34 31h1v1h-1zM3 32h1v1h-1zM5 32h3v1h-3zM9 32h1v1h-1zM11 32h1v1h-1zM16 32h2v1h-2zM21 32h3v1h-3zM25 32h1v1h-1zM27 32h2v1h-2zM30 32h1v1h-1zM34 32h2v1h-2zM3 33h1v1h-1zM5 33h3v1h-3zM9 33h1v1h-1zM12 33h2v1h-2zM15 33h1v1h-1zM17 33h1v1h-1zM19 33h1v1h-1zM22 33h1v1h-1zM24 33h3v1h-3zM28 33h1v1h-1zM30 33h2v1h-2zM33 33h3v1h-3zM3 34h1v1h-1zM9 34h1v1h-1zM12 34h3v1h-3zM18 34h2v1h-2zM21 34h1v1h-1zM26 34h1v1h-1zM28 34h8v1h-8zM3 35h7v1h-7zM11 35h1v1h-1zM14 35h3v1h-3zM19 35h2v1h-2zM25 35h7v1h-7z\" fill=\"#151310\"/></svg>", "5": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" shape-rendering=\"crispEdges\" role=\"img\" aria-label=\"QR 코드\"><rect width=\"39\" height=\"39\" fill=\"#FFFFFF\"/><path d=\"M3 3h7v1h-7zM11 3h1v1h-1zM18 3h2v1h-2zM21 3h1v1h-1zM25 3h3v1h-3zM29 3h7v1h-7zM3 4h1v1h-1zM9 4h1v1h-1zM12 4h3v1h-3zM19 4h1v1h-1zM22 4h2v1h-2zM27 4h1v1h-1zM29 4h1v1h-1zM35 4h1v1h-1zM3 5h1v1h-1zM5 5h3v1h-3zM9 5h1v1h-1zM12 5h3v1h-3zM16 5h1v1h-1zM20 5h1v1h-1zM23 5h2v1h-2zM27 5h1v1h-1zM29 5h1v1h-1zM31 5h3v1h-3zM35 5h1v1h-1zM3 6h1v1h-1zM5 6h3v1h-3zM9 6h1v1h-1zM11 6h3v1h-3zM15 6h1v1h-1zM17 6h2v1h-2zM23 6h1v1h-1zM29 6h1v1h-1zM31 6h3v1h-3zM35 6h1v1h-1zM3 7h1v1h-1zM5 7h3v1h-3zM9 7h1v1h-1zM11 7h1v1h-1zM14 7h1v1h-1zM17 7h1v1h-1zM20 7h2v1h-2zM25 7h2v1h-2zM29 7h1v1h-1zM31 7h3v1h-3zM35 7h1v1h-1zM3 8h1v1h-1zM9 8h1v1h-1zM11 8h1v1h-1zM13 8h1v1h-1zM15 8h3v1h-3zM19 8h1v1h-1zM21 8h2v1h-2zM29 8h1v1h-1zM35 8h1v1h-1zM3 9h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM19 9h1v1h-1zM21 9h1v1h-1zM23 9h1v1h-1zM25 9h1v1h-1zM27 9h1v1h-1zM29 9h7v1h-7zM11 10h2v1h-2zM15 10h1v1h-1zM17 10h4v1h-4zM22 10h6v1h-6zM3 11h1v1h-1zM7 11h1v1h-1zM9 11h4v1h-4zM14 11h2v1h-2zM20 11h1v1h-1zM24 11h1v1h-1zM26 11h7v1h-7zM35 11h1v1h-1zM3 12h3v1h-3zM7 12h1v1h-1zM10 12h2v1h-2zM13 12h8v1h-8zM25 12h2v1h-2zM28 12h1v1h-1zM32 12h3v1h-3zM6 13h4v1h-4zM12 13h1v1h-1zM14 13h2v1h-2zM18 13h1v1h-1zM21 13h1v1h-1zM23 13h7v1h-7zM32 13h1v1h-1zM34 13h1v1h-1zM3 14h5v1h-5zM10 14h6v1h-6zM17 14h1v1h-1zM20 14h2v1h-2zM24 14h5v1h-5zM34 14h2v1h-2zM3 15h1v1h-1zM5 15h1v1h-1zM7 15h1v1h-1zM9 15h1v1h-1zM11 15h8v1h-8zM20 15h2v1h-2zM23 15h2v1h-2zM27 15h1v1h-1zM29 15h1v1h-1zM31 15h2v1h-2zM4 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM12 16h3v1h-3zM19 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h1v1h-1zM32 16h1v1h-1zM6 17h2v1h-2zM9 17h2v1h-2zM13 17h2v1h-2zM16 17h2v1h-2zM19 17h3v1h-3zM24 17h6v1h-6zM31 17h4v1h-4zM3 18h6v1h-6zM10 18h1v1h-1zM14 18h2v1h-2zM17 18h1v1h-1zM20 18h2v1h-2zM24 18h6v1h-6zM31 18h1v1h-1zM7 19h1v1h-1zM9 19h2v1h-2zM12 19h3v1h-3zM17 19h2v1h-2zM20 19h1v1h-1zM22 19h3v1h-3zM26 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM34 19h1v1h-1zM3 20h1v1h-1zM6 20h1v1h-1zM11 20h1v1h-1zM15 20h1v1h-1zM18 20h1v1h-1zM21 20h1v1h-1zM24 20h3v1h-3zM28 20h1v1h-1zM32 20h3v1h-3zM3 21h1v1h-1zM9 21h2v1h-2zM12 21h1v1h-1zM15 21h1v1h-1zM17 21h2v1h-2zM20 21h2v1h-2zM23 21h1v1h-1zM26 21h1v1h-1zM28 21h3v1h-3zM32 21h1v1h-1zM34 21h1v1h-1zM3 22h2v1h-2zM6 22h3v1h-3zM13 22h3v1h-3zM17 22h1v1h-1zM20 22h5v1h-5zM26 22h1v1h-1zM28 22h3v1h-3zM6 23h1v1h-1zM8 23h2v1h-2zM11 23h1v1h-1zM13 23h1v1h-1zM16 23h4v1h-4zM21 23h2v1h-2zM24 23h1v1h-1zM26 23h2v1h-2zM29 23h1v1h-1zM31 23h2v1h-2zM35 23h1v1h-1zM3 24h2v1h-2zM6 24h1v1h-1zM8 24h1v1h-1zM11 24h1v1h-1zM17 24h1v1h-1zM21 24h1v1h-1zM26 24h2v1h-2zM30 24h1v1h-1zM32 24h3v1h-3zM5 25h1v1h-1zM9 25h3v1h-3zM13 25h1v1h-1zM15 25h1v1h-1zM18 25h1v1h-1zM23 25h5v1h-5zM29 25h1v1h-1zM31 25h1v1h-1zM33 25h2v1h-2zM5 26h1v1h-1zM8 26h1v1h-1zM10 26h2v1h-2zM13 26h2v1h-2zM16 26h1v1h-1zM18 26h3v1h-3zM22 26h1v1h-1zM24 26h3v1h-3zM29 26h1v1h-1zM32 26h1v1h-1zM34 26h2v1h-2zM3 27h2v1h-2zM6 27h1v1h-1zM8 27h3v1h-3zM12 27h3v1h-3zM20 27h5v1h-5zM26 27h6v1h-6zM35 27h1v1h-1zM11 28h2v1h-2zM14 28h1v1h-1zM16 28h4v1h-4zM21 28h1v1h-1zM25 28h1v1h-1zM27 28h1v1h-1zM31 28h1v1h-1zM33 28h2v1h-2zM3 29h7v1h-7zM11 29h4v1h-4zM17 29h2v1h-2zM20 29h1v1h-1zM25 29h1v1h-1zM27 29h1v1h-1zM29 29h1v1h-1zM31 29h2v1h-2zM34 29h1v1h-1zM3 30h1v1h-1zM9 30h1v1h-1zM12 30h2v1h-2zM15 30h2v1h-2zM18 30h3v1h-3zM22 30h3v1h-3zM27 30h1v1h-1zM31 30h1v1h-1zM34 30h2v1h-2zM3 31h1v1h-1zM5 31h3v1h-3zM9 31h1v1h-1zM11 31h1v1h-1zM13 31h1v1h-1zM15 31h2v1h-2zM18 31h1v1h-1zM21 31h1v1h-1zM24 31h1v1h-1zM27 31h6v1h-6zM3 32h1v1h-1zM5 32h3v1h-3zM9 32h1v1h-1zM14 32h1v1h-1zM17 32h1v1h-1zM19 32h3v1h-3zM26 32h2v1h-2zM29 32h4v1h-4zM3 33h1v1h-1zM5 33h3v1h-3zM9 33h1v1h-1zM12 33h2v1h-2zM15 33h2v1h-2zM19 33h1v1h-1zM21 33h1v1h-1zM23 33h5v1h-5zM29 33h3v1h-3zM3 34h1v1h-1zM9 34h1v1h-1zM15 34h3v1h-3zM20 34h1v1h-1zM22 34h4v1h-4zM27 34h1v1h-1zM3 35h7v1h-7zM11 35h8v1h-8zM20 35h1v1h-1zM23 35h2v1h-2zM26 35h3v1h-3zM35 35h1v1h-1z\" fill=\"#151310\"/></svg>", "6": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" shape-rendering=\"crispEdges\" role=\"img\" aria-label=\"QR 코드\"><rect width=\"39\" height=\"39\" fill=\"#FFFFFF\"/><path d=\"M3 3h7v1h-7zM11 3h1v1h-1zM18 3h2v1h-2zM21 3h1v1h-1zM25 3h3v1h-3zM29 3h7v1h-7zM3 4h1v1h-1zM9 4h1v1h-1zM12 4h3v1h-3zM19 4h1v1h-1zM22 4h2v1h-2zM27 4h1v1h-1zM29 4h1v1h-1zM35 4h1v1h-1zM3 5h1v1h-1zM5 5h3v1h-3zM9 5h1v1h-1zM12 5h3v1h-3zM16 5h1v1h-1zM20 5h1v1h-1zM23 5h2v1h-2zM27 5h1v1h-1zM29 5h1v1h-1zM31 5h3v1h-3zM35 5h1v1h-1zM3 6h1v1h-1zM5 6h3v1h-3zM9 6h1v1h-1zM11 6h1v1h-1zM15 6h1v1h-1zM17 6h2v1h-2zM23 6h1v1h-1zM29 6h1v1h-1zM31 6h3v1h-3zM35 6h1v1h-1zM3 7h1v1h-1zM5 7h3v1h-3zM9 7h1v1h-1zM11 7h1v1h-1zM17 7h1v1h-1zM20 7h2v1h-2zM25 7h2v1h-2zM29 7h1v1h-1zM31 7h3v1h-3zM35 7h1v1h-1zM3 8h1v1h-1zM9 8h1v1h-1zM11 8h1v1h-1zM13 8h1v1h-1zM15 8h3v1h-3zM19 8h1v1h-1zM21 8h2v1h-2zM29 8h1v1h-1zM35 8h1v1h-1zM3 9h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM19 9h1v1h-1zM21 9h1v1h-1zM23 9h1v1h-1zM25 9h1v1h-1zM27 9h1v1h-1zM29 9h7v1h-7zM11 10h2v1h-2zM14 10h2v1h-2zM17 10h4v1h-4zM22 10h6v1h-6zM3 11h1v1h-1zM7 11h1v1h-1zM9 11h4v1h-4zM15 11h1v1h-1zM20 11h1v1h-1zM24 11h1v1h-1zM26 11h7v1h-7zM35 11h1v1h-1zM3 12h3v1h-3zM10 12h2v1h-2zM13 12h8v1h-8zM25 12h2v1h-2zM28 12h1v1h-1zM32 12h3v1h-3zM3 13h1v1h-1zM6 13h4v1h-4zM12 13h4v1h-4zM18 13h1v1h-1zM21 13h1v1h-1zM23 13h7v1h-7zM32 13h1v1h-1zM34 13h1v1h-1zM3 14h1v1h-1zM5 14h2v1h-2zM10 14h6v1h-6zM17 14h1v1h-1zM20 14h2v1h-2zM24 14h5v1h-5zM34 14h2v1h-2zM4 15h2v1h-2zM7 15h1v1h-1zM9 15h1v1h-1zM11 15h2v1h-2zM14 15h1v1h-1zM16 15h3v1h-3zM20 15h2v1h-2zM23 15h2v1h-2zM27 15h1v1h-1zM29 15h1v1h-1zM31 15h2v1h-2zM5 16h2v1h-2zM12 16h2v1h-2zM15 16h1v1h-1zM19 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h1v1h-1zM32 16h1v1h-1zM6 17h2v1h-2zM9 17h2v1h-2zM13 17h1v1h-1zM16 17h2v1h-2zM19 17h3v1h-3zM24 17h6v1h-6zM31 17h4v1h-4zM3 18h3v1h-3zM7 18h2v1h-2zM11 18h1v1h-1zM17 18h1v1h-1zM20 18h2v1h-2zM24 18h6v1h-6zM31 18h1v1h-1zM5 19h1v1h-1zM7 19h1v1h-1zM9 19h1v1h-1zM12 19h2v1h-2zM17 19h2v1h-2zM20 19h1v1h-1zM22 19h3v1h-3zM26 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM34 19h1v1h-1zM6 20h2v1h-2zM11 20h2v1h-2zM15 20h2v1h-2zM18 20h1v1h-1zM21 20h1v1h-1zM24 20h3v1h-3zM28 20h1v1h-1zM32 20h3v1h-3zM3 21h2v1h-2zM7 21h1v1h-1zM9 21h2v1h-2zM12 21h1v1h-1zM15 21h4v1h-4zM21 21h1v1h-1zM23 21h1v1h-1zM26 21h1v1h-1zM28 21h3v1h-3zM32 21h1v1h-1zM34 21h1v1h-1zM3 22h1v1h-1zM6 22h2v1h-2zM12 22h5v1h-5zM20 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM28 22h3v1h-3zM4 23h1v1h-1zM6 23h2v1h-2zM9 23h1v1h-1zM13 23h1v1h-1zM16 23h4v1h-4zM21 23h2v1h-2zM24 23h1v1h-1zM26 23h2v1h-2zM29 23h1v1h-1zM31 23h2v1h-2zM35 23h1v1h-1zM3 24h1v1h-1zM6 24h1v1h-1zM10 24h2v1h-2zM13 24h2v1h-2zM21 24h1v1h-1zM26 24h2v1h-2zM30 24h1v1h-1zM32 24h3v1h-3zM6 25h1v1h-1zM9 25h1v1h-1zM13 25h1v1h-1zM18 25h1v1h-1zM23 25h5v1h-5zM29 25h1v1h-1zM31 25h1v1h-1zM33 25h2v1h-2zM6 26h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM13 26h2v1h-2zM16 26h1v1h-1zM18 26h3v1h-3zM22 26h1v1h-1zM24 26h3v1h-3zM29 26h1v1h-1zM32 26h1v1h-1zM34 26h2v1h-2zM3 27h2v1h-2zM6 27h1v1h-1zM8 27h2v1h-2zM12 27h3v1h-3zM20 27h5v1h-5zM26 27h6v1h-6zM35 27h1v1h-1zM11 28h1v1h-1zM14 28h1v1h-1zM17 28h3v1h-3zM21 28h1v1h-1zM25 28h1v1h-1zM27 28h1v1h-1zM31 28h1v1h-1zM33 28h2v1h-2zM3 29h7v1h-7zM11 29h1v1h-1zM14 29h1v1h-1zM17 29h2v1h-2zM20 29h1v1h-1zM25 29h1v1h-1zM27 29h1v1h-1zM29 29h1v1h-1zM31 29h2v1h-2zM34 29h1v1h-1zM3 30h1v1h-1zM9 30h1v1h-1zM12 30h2v1h-2zM15 30h6v1h-6zM22 30h3v1h-3zM27 30h1v1h-1zM31 30h1v1h-1zM34 30h2v1h-2zM3 31h1v1h-1zM5 31h3v1h-3zM9 31h1v1h-1zM11 31h2v1h-2zM16 31h3v1h-3zM21 31h1v1h-1zM24 31h1v1h-1zM27 31h6v1h-6zM3 32h1v1h-1zM5 32h3v1h-3zM9 32h1v1h-1zM19 32h3v1h-3zM26 32h2v1h-2zM29 32h4v1h-4zM3 33h1v1h-1zM5 33h3v1h-3zM9 33h1v1h-1zM12 33h2v1h-2zM16 33h1v1h-1zM19 33h1v1h-1zM21 33h1v1h-1zM23 33h5v1h-5zM29 33h3v1h-3zM3 34h1v1h-1zM9 34h1v1h-1zM14 34h4v1h-4zM20 34h1v1h-1zM22 34h4v1h-4zM27 34h1v1h-1zM3 35h7v1h-7zM11 35h8v1h-8zM20 35h1v1h-1zM23 35h2v1h-2zM26 35h3v1h-3zM35 35h1v1h-1z\" fill=\"#151310\"/></svg>", "7": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" shape-rendering=\"crispEdges\" role=\"img\" aria-label=\"QR 코드\"><rect width=\"39\" height=\"39\" fill=\"#FFFFFF\"/><path d=\"M3 3h7v1h-7zM11 3h1v1h-1zM18 3h2v1h-2zM21 3h1v1h-1zM25 3h3v1h-3zM29 3h7v1h-7zM3 4h1v1h-1zM9 4h1v1h-1zM12 4h3v1h-3zM19 4h1v1h-1zM22 4h2v1h-2zM27 4h1v1h-1zM29 4h1v1h-1zM35 4h1v1h-1zM3 5h1v1h-1zM5 5h3v1h-3zM9 5h1v1h-1zM12 5h3v1h-3zM16 5h1v1h-1zM20 5h1v1h-1zM23 5h2v1h-2zM27 5h1v1h-1zM29 5h1v1h-1zM31 5h3v1h-3zM35 5h1v1h-1zM3 6h1v1h-1zM5 6h3v1h-3zM9 6h1v1h-1zM11 6h2v1h-2zM17 6h2v1h-2zM23 6h1v1h-1zM29 6h1v1h-1zM31 6h3v1h-3zM35 6h1v1h-1zM3 7h1v1h-1zM5 7h3v1h-3zM9 7h1v1h-1zM11 7h1v1h-1zM15 7h1v1h-1zM17 7h1v1h-1zM20 7h2v1h-2zM25 7h2v1h-2zM29 7h1v1h-1zM31 7h3v1h-3zM35 7h1v1h-1zM3 8h1v1h-1zM9 8h1v1h-1zM11 8h1v1h-1zM13 8h1v1h-1zM16 8h2v1h-2zM19 8h1v1h-1zM21 8h2v1h-2zM29 8h1v1h-1zM35 8h1v1h-1zM3 9h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM19 9h1v1h-1zM21 9h1v1h-1zM23 9h1v1h-1zM25 9h1v1h-1zM27 9h1v1h-1zM29 9h7v1h-7zM11 10h2v1h-2zM14 10h2v1h-2zM17 10h4v1h-4zM22 10h6v1h-6zM3 11h1v1h-1zM7 11h1v1h-1zM9 11h4v1h-4zM14 11h2v1h-2zM20 11h1v1h-1zM24 11h1v1h-1zM26 11h7v1h-7zM35 11h1v1h-1zM4 12h2v1h-2zM7 12h1v1h-1zM10 12h2v1h-2zM13 12h8v1h-8zM25 12h2v1h-2zM28 12h1v1h-1zM32 12h3v1h-3zM4 13h1v1h-1zM6 13h4v1h-4zM13 13h3v1h-3zM18 13h1v1h-1zM21 13h1v1h-1zM23 13h7v1h-7zM32 13h1v1h-1zM34 13h1v1h-1zM3 14h1v1h-1zM5 14h3v1h-3zM10 14h2v1h-2zM14 14h2v1h-2zM17 14h1v1h-1zM20 14h2v1h-2zM24 14h5v1h-5zM34 14h2v1h-2zM3 15h1v1h-1zM5 15h5v1h-5zM12 15h3v1h-3zM16 15h3v1h-3zM20 15h2v1h-2zM23 15h2v1h-2zM27 15h1v1h-1zM29 15h1v1h-1zM31 15h2v1h-2zM5 16h1v1h-1zM10 16h1v1h-1zM12 16h3v1h-3zM19 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h1v1h-1zM32 16h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM13 17h2v1h-2zM16 17h2v1h-2zM19 17h3v1h-3zM24 17h6v1h-6zM31 17h4v1h-4zM3 18h2v1h-2zM7 18h2v1h-2zM10 18h2v1h-2zM14 18h1v1h-1zM17 18h1v1h-1zM20 18h2v1h-2zM24 18h6v1h-6zM31 18h1v1h-1zM7 19h1v1h-1zM9 19h2v1h-2zM12 19h3v1h-3zM17 19h2v1h-2zM20 19h1v1h-1zM22 19h3v1h-3zM26 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM34 19h1v1h-1zM3 20h1v1h-1zM6 20h2v1h-2zM11 20h1v1h-1zM15 20h1v1h-1zM18 20h1v1h-1zM21 20h1v1h-1zM24 20h3v1h-3zM28 20h1v1h-1zM32 20h3v1h-3zM4 21h1v1h-1zM8 21h3v1h-3zM12 21h1v1h-1zM15 21h4v1h-4zM21 21h1v1h-1zM23 21h1v1h-1zM26 21h1v1h-1zM28 21h3v1h-3zM32 21h1v1h-1zM34 21h1v1h-1zM4 22h1v1h-1zM6 22h1v1h-1zM13 22h3v1h-3zM17 22h1v1h-1zM20 22h5v1h-5zM26 22h1v1h-1zM28 22h3v1h-3zM4 23h1v1h-1zM6 23h4v1h-4zM11 23h1v1h-1zM16 23h1v1h-1zM18 23h2v1h-2zM21 23h2v1h-2zM24 23h1v1h-1zM26 23h2v1h-2zM29 23h1v1h-1zM31 23h2v1h-2zM35 23h1v1h-1zM3 24h1v1h-1zM6 24h1v1h-1zM8 24h1v1h-1zM10 24h2v1h-2zM13 24h1v1h-1zM15 24h1v1h-1zM21 24h1v1h-1zM26 24h2v1h-2zM30 24h1v1h-1zM32 24h3v1h-3zM5 25h2v1h-2zM9 25h2v1h-2zM13 25h2v1h-2zM18 25h1v1h-1zM23 25h5v1h-5zM29 25h1v1h-1zM31 25h1v1h-1zM33 25h2v1h-2zM5 26h2v1h-2zM8 26h1v1h-1zM10 26h2v1h-2zM13 26h2v1h-2zM16 26h1v1h-1zM18 26h3v1h-3zM22 26h1v1h-1zM24 26h3v1h-3zM29 26h1v1h-1zM32 26h1v1h-1zM34 26h2v1h-2zM3 27h2v1h-2zM6 27h1v1h-1zM8 27h2v1h-2zM12 27h3v1h-3zM20 27h5v1h-5zM26 27h6v1h-6zM35 27h1v1h-1zM11 28h2v1h-2zM14 28h1v1h-1zM17 28h3v1h-3zM21 28h1v1h-1zM25 28h1v1h-1zM27 28h1v1h-1zM31 28h1v1h-1zM33 28h2v1h-2zM3 29h7v1h-7zM11 29h2v1h-2zM14 29h1v1h-1zM16 29h1v1h-1zM18 29h1v1h-1zM20 29h1v1h-1zM25 29h1v1h-1zM27 29h1v1h-1zM29 29h1v1h-1zM31 29h2v1h-2zM34 29h1v1h-1zM3 30h1v1h-1zM9 30h1v1h-1zM13 30h1v1h-1zM15 30h2v1h-2zM18 30h3v1h-3zM22 30h3v1h-3zM27 30h1v1h-1zM31 30h1v1h-1zM34 30h2v1h-2zM3 31h1v1h-1zM5 31h3v1h-3zM9 31h1v1h-1zM11 31h2v1h-2zM15 31h1v1h-1zM17 31h2v1h-2zM21 31h1v1h-1zM24 31h1v1h-1zM27 31h6v1h-6zM3 32h1v1h-1zM5 32h3v1h-3zM9 32h1v1h-1zM13 32h1v1h-1zM17 32h1v1h-1zM19 32h3v1h-3zM26 32h2v1h-2zM29 32h4v1h-4zM3 33h1v1h-1zM5 33h3v1h-3zM9 33h1v1h-1zM12 33h2v1h-2zM15 33h2v1h-2zM19 33h1v1h-1zM21 33h1v1h-1zM23 33h5v1h-5zM29 33h3v1h-3zM3 34h1v1h-1zM9 34h1v1h-1zM14 34h4v1h-4zM20 34h1v1h-1zM22 34h4v1h-4zM27 34h1v1h-1zM3 35h7v1h-7zM11 35h8v1h-8zM20 35h1v1h-1zM23 35h2v1h-2zM26 35h3v1h-3zM35 35h1v1h-1z\" fill=\"#151310\"/></svg>", "8": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" shape-rendering=\"crispEdges\" role=\"img\" aria-label=\"QR 코드\"><rect width=\"39\" height=\"39\" fill=\"#FFFFFF\"/><path d=\"M3 3h7v1h-7zM11 3h1v1h-1zM18 3h2v1h-2zM21 3h1v1h-1zM25 3h3v1h-3zM29 3h7v1h-7zM3 4h1v1h-1zM9 4h1v1h-1zM12 4h3v1h-3zM19 4h1v1h-1zM22 4h2v1h-2zM27 4h1v1h-1zM29 4h1v1h-1zM35 4h1v1h-1zM3 5h1v1h-1zM5 5h3v1h-3zM9 5h1v1h-1zM14 5h1v1h-1zM16 5h1v1h-1zM20 5h1v1h-1zM23 5h2v1h-2zM27 5h1v1h-1zM29 5h1v1h-1zM31 5h3v1h-3zM35 5h1v1h-1zM3 6h1v1h-1zM5 6h3v1h-3zM9 6h1v1h-1zM11 6h1v1h-1zM13 6h1v1h-1zM17 6h2v1h-2zM23 6h1v1h-1zM29 6h1v1h-1zM31 6h3v1h-3zM35 6h1v1h-1zM3 7h1v1h-1zM5 7h3v1h-3zM9 7h1v1h-1zM11 7h1v1h-1zM15 7h1v1h-1zM17 7h1v1h-1zM20 7h2v1h-2zM25 7h2v1h-2zM29 7h1v1h-1zM31 7h3v1h-3zM35 7h1v1h-1zM3 8h1v1h-1zM9 8h1v1h-1zM11 8h1v1h-1zM13 8h1v1h-1zM15 8h3v1h-3zM19 8h1v1h-1zM21 8h2v1h-2zM29 8h1v1h-1zM35 8h1v1h-1zM3 9h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM19 9h1v1h-1zM21 9h1v1h-1zM23 9h1v1h-1zM25 9h1v1h-1zM27 9h1v1h-1zM29 9h7v1h-7zM11 10h2v1h-2zM14 10h2v1h-2zM17 10h4v1h-4zM22 10h6v1h-6zM3 11h1v1h-1zM7 11h1v1h-1zM9 11h4v1h-4zM14 11h2v1h-2zM20 11h1v1h-1zM24 11h1v1h-1zM26 11h7v1h-7zM35 11h1v1h-1zM3 12h3v1h-3zM10 12h2v1h-2zM13 12h8v1h-8zM25 12h2v1h-2zM28 12h1v1h-1zM32 12h3v1h-3zM3 13h1v1h-1zM6 13h4v1h-4zM14 13h2v1h-2zM18 13h1v1h-1zM21 13h1v1h-1zM23 13h7v1h-7zM32 13h1v1h-1zM34 13h1v1h-1zM5 14h4v1h-4zM10 14h3v1h-3zM14 14h2v1h-2zM17 14h1v1h-1zM20 14h2v1h-2zM24 14h5v1h-5zM34 14h2v1h-2zM5 15h1v1h-1zM9 15h1v1h-1zM11 15h4v1h-4zM16 15h3v1h-3zM20 15h2v1h-2zM23 15h2v1h-2zM27 15h1v1h-1zM29 15h1v1h-1zM31 15h2v1h-2zM4 16h3v1h-3zM8 16h1v1h-1zM11 16h2v1h-2zM14 16h2v1h-2zM19 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h1v1h-1zM32 16h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM13 17h5v1h-5zM19 17h3v1h-3zM24 17h6v1h-6zM31 17h4v1h-4zM3 18h6v1h-6zM10 18h1v1h-1zM15 18h1v1h-1zM17 18h1v1h-1zM20 18h2v1h-2zM24 18h6v1h-6zM31 18h1v1h-1zM5 19h1v1h-1zM7 19h1v1h-1zM9 19h2v1h-2zM12 19h3v1h-3zM17 19h2v1h-2zM20 19h1v1h-1zM22 19h3v1h-3zM26 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM34 19h1v1h-1zM6 20h2v1h-2zM11 20h2v1h-2zM15 20h1v1h-1zM18 20h1v1h-1zM20 20h2v1h-2zM24 20h3v1h-3zM28 20h1v1h-1zM32 20h3v1h-3zM3 21h2v1h-2zM9 21h2v1h-2zM12 21h1v1h-1zM15 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h1v1h-1zM26 21h1v1h-1zM28 21h3v1h-3zM32 21h1v1h-1zM34 21h1v1h-1zM4 22h1v1h-1zM6 22h1v1h-1zM8 22h1v1h-1zM14 22h2v1h-2zM17 22h1v1h-1zM20 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM28 22h3v1h-3zM3 23h1v1h-1zM7 23h3v1h-3zM11 23h3v1h-3zM17 23h3v1h-3zM21 23h2v1h-2zM24 23h1v1h-1zM26 23h2v1h-2zM29 23h1v1h-1zM31 23h2v1h-2zM35 23h1v1h-1zM3 24h1v1h-1zM10 24h2v1h-2zM14 24h2v1h-2zM17 24h1v1h-1zM21 24h1v1h-1zM26 24h2v1h-2zM30 24h1v1h-1zM32 24h3v1h-3zM5 25h2v1h-2zM9 25h3v1h-3zM13 25h1v1h-1zM15 25h1v1h-1zM18 25h1v1h-1zM23 25h5v1h-5zM29 25h1v1h-1zM31 25h1v1h-1zM33 25h2v1h-2zM5 26h2v1h-2zM8 26h1v1h-1zM10 26h2v1h-2zM13 26h4v1h-4zM18 26h3v1h-3zM22 26h1v1h-1zM24 26h3v1h-3zM29 26h1v1h-1zM32 26h1v1h-1zM34 26h2v1h-2zM3 27h4v1h-4zM8 27h3v1h-3zM12 27h3v1h-3zM20 27h5v1h-5zM26 27h6v1h-6zM35 27h1v1h-1zM11 28h2v1h-2zM14 28h1v1h-1zM16 28h4v1h-4zM21 28h1v1h-1zM25 28h1v1h-1zM27 28h1v1h-1zM31 28h1v1h-1zM33 28h2v1h-2zM3 29h7v1h-7zM11 29h4v1h-4zM17 29h2v1h-2zM20 29h1v1h-1zM25 29h1v1h-1zM27 29h1v1h-1zM29 29h1v1h-1zM31 29h2v1h-2zM34 29h1v1h-1zM3 30h1v1h-1zM9 30h1v1h-1zM12 30h1v1h-1zM15 30h1v1h-1zM17 30h4v1h-4zM22 30h3v1h-3zM27 30h1v1h-1zM31 30h1v1h-1zM34 30h2v1h-2zM3 31h1v1h-1zM5 31h3v1h-3zM9 31h1v1h-1zM11 31h2v1h-2zM16 31h3v1h-3zM21 31h1v1h-1zM24 31h1v1h-1zM27 31h6v1h-6zM3 32h1v1h-1zM5 32h3v1h-3zM9 32h1v1h-1zM14 32h2v1h-2zM19 32h3v1h-3zM26 32h2v1h-2zM29 32h4v1h-4zM3 33h1v1h-1zM5 33h3v1h-3zM9 33h1v1h-1zM12 33h3v1h-3zM16 33h1v1h-1zM19 33h1v1h-1zM21 33h1v1h-1zM23 33h5v1h-5zM29 33h3v1h-3zM3 34h1v1h-1zM9 34h1v1h-1zM16 34h2v1h-2zM20 34h1v1h-1zM22 34h4v1h-4zM27 34h1v1h-1zM3 35h7v1h-7zM11 35h3v1h-3zM15 35h4v1h-4zM20 35h1v1h-1zM23 35h2v1h-2zM26 35h3v1h-3zM35 35h1v1h-1z\" fill=\"#151310\"/></svg>", "9": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" shape-rendering=\"crispEdges\" role=\"img\" aria-label=\"QR 코드\"><rect width=\"39\" height=\"39\" fill=\"#FFFFFF\"/><path d=\"M3 3h7v1h-7zM11 3h1v1h-1zM18 3h2v1h-2zM21 3h1v1h-1zM25 3h3v1h-3zM29 3h7v1h-7zM3 4h1v1h-1zM9 4h1v1h-1zM12 4h3v1h-3zM19 4h1v1h-1zM22 4h2v1h-2zM27 4h1v1h-1zM29 4h1v1h-1zM35 4h1v1h-1zM3 5h1v1h-1zM5 5h3v1h-3zM9 5h1v1h-1zM14 5h1v1h-1zM16 5h1v1h-1zM20 5h1v1h-1zM23 5h2v1h-2zM27 5h1v1h-1zM29 5h1v1h-1zM31 5h3v1h-3zM35 5h1v1h-1zM3 6h1v1h-1zM5 6h3v1h-3zM9 6h1v1h-1zM11 6h3v1h-3zM15 6h1v1h-1zM17 6h2v1h-2zM23 6h1v1h-1zM29 6h1v1h-1zM31 6h3v1h-3zM35 6h1v1h-1zM3 7h1v1h-1zM5 7h3v1h-3zM9 7h1v1h-1zM11 7h1v1h-1zM17 7h1v1h-1zM20 7h2v1h-2zM25 7h2v1h-2zM29 7h1v1h-1zM31 7h3v1h-3zM35 7h1v1h-1zM3 8h1v1h-1zM9 8h1v1h-1zM11 8h1v1h-1zM13 8h1v1h-1zM16 8h2v1h-2zM19 8h1v1h-1zM21 8h2v1h-2zM29 8h1v1h-1zM35 8h1v1h-1zM3 9h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM19 9h1v1h-1zM21 9h1v1h-1zM23 9h1v1h-1zM25 9h1v1h-1zM27 9h1v1h-1zM29 9h7v1h-7zM11 10h2v1h-2zM14 10h2v1h-2zM17 10h4v1h-4zM22 10h6v1h-6zM3 11h1v1h-1zM7 11h1v1h-1zM9 11h4v1h-4zM15 11h1v1h-1zM20 11h1v1h-1zM24 11h1v1h-1zM26 11h7v1h-7zM35 11h1v1h-1zM4 12h2v1h-2zM7 12h1v1h-1zM10 12h2v1h-2zM13 12h8v1h-8zM25 12h2v1h-2zM28 12h1v1h-1zM32 12h3v1h-3zM4 13h1v1h-1zM6 13h4v1h-4zM12 13h1v1h-1zM14 13h2v1h-2zM18 13h1v1h-1zM21 13h1v1h-1zM23 13h7v1h-7zM32 13h1v1h-1zM34 13h1v1h-1zM5 14h2v1h-2zM8 14h1v1h-1zM10 14h2v1h-2zM13 14h3v1h-3zM17 14h1v1h-1zM20 14h2v1h-2zM24 14h5v1h-5zM34 14h2v1h-2zM3 15h4v1h-4zM8 15h2v1h-2zM12 15h1v1h-1zM14 15h1v1h-1zM16 15h3v1h-3zM20 15h2v1h-2zM23 15h2v1h-2zM27 15h1v1h-1zM29 15h1v1h-1zM31 15h2v1h-2zM4 16h2v1h-2zM8 16h1v1h-1zM10 16h3v1h-3zM19 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h1v1h-1zM32 16h1v1h-1zM5 17h3v1h-3zM9 17h2v1h-2zM13 17h1v1h-1zM15 17h3v1h-3zM19 17h3v1h-3zM24 17h6v1h-6zM31 17h4v1h-4zM3 18h2v1h-2zM6 18h3v1h-3zM14 18h2v1h-2zM17 18h1v1h-1zM20 18h2v1h-2zM24 18h6v1h-6zM31 18h1v1h-1zM7 19h1v1h-1zM9 19h1v1h-1zM12 19h2v1h-2zM17 19h2v1h-2zM20 19h1v1h-1zM22 19h3v1h-3zM26 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM34 19h1v1h-1zM3 20h1v1h-1zM6 20h2v1h-2zM11 20h1v1h-1zM15 20h2v1h-2zM18 20h1v1h-1zM20 20h2v1h-2zM24 20h3v1h-3zM28 20h1v1h-1zM32 20h3v1h-3zM4 21h1v1h-1zM7 21h4v1h-4zM12 21h1v1h-1zM15 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h1v1h-1zM26 21h1v1h-1zM28 21h3v1h-3zM32 21h1v1h-1zM34 21h1v1h-1zM3 22h1v1h-1zM6 22h3v1h-3zM12 22h1v1h-1zM14 22h3v1h-3zM20 22h5v1h-5zM26 22h1v1h-1zM28 22h3v1h-3zM3 23h1v1h-1zM7 23h1v1h-1zM9 23h1v1h-1zM12 23h1v1h-1zM18 23h2v1h-2zM21 23h2v1h-2zM24 23h1v1h-1zM26 23h2v1h-2zM29 23h1v1h-1zM31 23h2v1h-2zM35 23h1v1h-1zM3 24h1v1h-1zM8 24h1v1h-1zM10 24h2v1h-2zM17 24h1v1h-1zM21 24h1v1h-1zM26 24h2v1h-2zM30 24h1v1h-1zM32 24h3v1h-3zM6 25h1v1h-1zM9 25h1v1h-1zM11 25h1v1h-1zM13 25h3v1h-3zM18 25h1v1h-1zM23 25h5v1h-5zM29 25h1v1h-1zM31 25h1v1h-1zM33 25h2v1h-2zM6 26h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM13 26h4v1h-4zM18 26h3v1h-3zM22 26h1v1h-1zM24 26h3v1h-3zM29 26h1v1h-1zM32 26h1v1h-1zM34 26h2v1h-2zM3 27h4v1h-4zM8 27h3v1h-3zM12 27h3v1h-3zM20 27h5v1h-5zM26 27h6v1h-6zM35 27h1v1h-1zM11 28h1v1h-1zM14 28h1v1h-1zM16 28h4v1h-4zM21 28h1v1h-1zM25 28h1v1h-1zM27 28h1v1h-1zM31 28h1v1h-1zM33 28h2v1h-2zM3 29h7v1h-7zM11 29h1v1h-1zM13 29h2v1h-2zM16 29h1v1h-1zM18 29h1v1h-1zM20 29h1v1h-1zM25 29h1v1h-1zM27 29h1v1h-1zM29 29h1v1h-1zM31 29h2v1h-2zM34 29h1v1h-1zM3 30h1v1h-1zM9 30h1v1h-1zM15 30h1v1h-1zM18 30h3v1h-3zM22 30h3v1h-3zM27 30h1v1h-1zM31 30h1v1h-1zM34 30h2v1h-2zM3 31h1v1h-1zM5 31h3v1h-3zM9 31h1v1h-1zM11 31h2v1h-2zM15 31h1v1h-1zM17 31h2v1h-2zM21 31h1v1h-1zM24 31h1v1h-1zM27 31h6v1h-6zM3 32h1v1h-1zM5 32h3v1h-3zM9 32h1v1h-1zM13 32h3v1h-3zM17 32h1v1h-1zM19 32h3v1h-3zM26 32h2v1h-2zM29 32h4v1h-4zM3 33h1v1h-1zM5 33h3v1h-3zM9 33h1v1h-1zM12 33h5v1h-5zM19 33h1v1h-1zM21 33h1v1h-1zM23 33h5v1h-5zM29 33h3v1h-3zM3 34h1v1h-1zM9 34h1v1h-1zM16 34h2v1h-2zM20 34h1v1h-1zM22 34h4v1h-4zM27 34h1v1h-1zM3 35h7v1h-7zM11 35h3v1h-3zM15 35h4v1h-4zM20 35h1v1h-1zM23 35h2v1h-2zM26 35h3v1h-3zM35 35h1v1h-1z\" fill=\"#151310\"/></svg>", "10": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" shape-rendering=\"crispEdges\" role=\"img\" aria-label=\"QR 코드\"><rect width=\"39\" height=\"39\" fill=\"#FFFFFF\"/><path d=\"M3 3h7v1h-7zM11 3h2v1h-2zM14 3h1v1h-1zM16 3h1v1h-1zM20 3h2v1h-2zM24 3h1v1h-1zM27 3h1v1h-1zM29 3h7v1h-7zM3 4h1v1h-1zM9 4h1v1h-1zM11 4h7v1h-7zM19 4h1v1h-1zM22 4h2v1h-2zM27 4h1v1h-1zM29 4h1v1h-1zM35 4h1v1h-1zM3 5h1v1h-1zM5 5h3v1h-3zM9 5h1v1h-1zM11 5h3v1h-3zM15 5h3v1h-3zM21 5h4v1h-4zM26 5h1v1h-1zM29 5h1v1h-1zM31 5h3v1h-3zM35 5h1v1h-1zM3 6h1v1h-1zM5 6h3v1h-3zM9 6h1v1h-1zM14 6h2v1h-2zM17 6h1v1h-1zM19 6h3v1h-3zM24 6h1v1h-1zM26 6h2v1h-2zM29 6h1v1h-1zM31 6h3v1h-3zM35 6h1v1h-1zM3 7h1v1h-1zM5 7h3v1h-3zM9 7h1v1h-1zM11 7h1v1h-1zM15 7h2v1h-2zM18 7h2v1h-2zM21 7h2v1h-2zM24 7h2v1h-2zM29 7h1v1h-1zM31 7h3v1h-3zM35 7h1v1h-1zM3 8h1v1h-1zM9 8h1v1h-1zM12 8h2v1h-2zM18 8h4v1h-4zM23 8h1v1h-1zM25 8h2v1h-2zM29 8h1v1h-1zM35 8h1v1h-1zM3 9h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM19 9h1v1h-1zM21 9h1v1h-1zM23 9h1v1h-1zM25 9h1v1h-1zM27 9h1v1h-1zM29 9h7v1h-7zM12 10h2v1h-2zM15 10h2v1h-2zM18 10h2v1h-2zM21 10h1v1h-1zM3 11h1v1h-1zM6 11h9v1h-9zM17 11h1v1h-1zM19 11h2v1h-2zM23 11h1v1h-1zM25 11h4v1h-4zM31 11h1v1h-1zM33 11h3v1h-3zM3 12h3v1h-3zM7 12h2v1h-2zM10 12h1v1h-1zM13 12h6v1h-6zM20 12h1v1h-1zM22 12h1v1h-1zM26 12h1v1h-1zM31 12h3v1h-3zM3 13h1v1h-1zM5 13h2v1h-2zM8 13h5v1h-5zM14 13h1v1h-1zM16 13h1v1h-1zM18 13h2v1h-2zM24 13h1v1h-1zM26 13h1v1h-1zM28 13h1v1h-1zM31 13h5v1h-5zM5 14h1v1h-1zM7 14h1v1h-1zM10 14h3v1h-3zM14 14h1v1h-1zM16 14h1v1h-1zM18 14h1v1h-1zM20 14h1v1h-1zM25 14h2v1h-2zM28 14h1v1h-1zM30 14h1v1h-1zM33 14h3v1h-3zM3 15h2v1h-2zM6 15h7v1h-7zM14 15h1v1h-1zM16 15h1v1h-1zM21 15h1v1h-1zM23 15h1v1h-1zM25 15h3v1h-3zM29 15h2v1h-2zM5 16h3v1h-3zM12 16h1v1h-1zM15 16h3v1h-3zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h1v1h-1zM32 16h1v1h-1zM3 17h1v1h-1zM7 17h3v1h-3zM11 17h6v1h-6zM18 17h1v1h-1zM22 17h1v1h-1zM24 17h2v1h-2zM29 17h1v1h-1zM31 17h1v1h-1zM5 18h2v1h-2zM11 18h1v1h-1zM15 18h3v1h-3zM19 18h1v1h-1zM23 18h1v1h-1zM25 18h1v1h-1zM28 18h1v1h-1zM30 18h4v1h-4zM35 18h1v1h-1zM3 19h1v1h-1zM5 19h2v1h-2zM8 19h2v1h-2zM12 19h2v1h-2zM15 19h1v1h-1zM17 19h2v1h-2zM23 19h1v1h-1zM28 19h5v1h-5zM6 20h1v1h-1zM10 20h2v1h-2zM13 20h1v1h-1zM15 20h10v1h-10zM29 20h1v1h-1zM31 20h1v1h-1zM33 20h1v1h-1zM35 20h1v1h-1zM5 21h8v1h-8zM14 21h1v1h-1zM16 21h1v1h-1zM18 21h1v1h-1zM20 21h3v1h-3zM26 21h2v1h-2zM30 21h1v1h-1zM32 21h2v1h-2zM35 21h1v1h-1zM6 22h1v1h-1zM10 22h10v1h-10zM25 22h1v1h-1zM27 22h1v1h-1zM31 22h5v1h-5zM3 23h3v1h-3zM8 23h4v1h-4zM13 23h1v1h-1zM15 23h2v1h-2zM19 23h5v1h-5zM25 23h3v1h-3zM30 23h1v1h-1zM32 23h1v1h-1zM3 24h3v1h-3zM7 24h1v1h-1zM11 24h3v1h-3zM16 24h1v1h-1zM22 24h1v1h-1zM25 24h4v1h-4zM30 24h4v1h-4zM3 25h1v1h-1zM7 25h4v1h-4zM12 25h5v1h-5zM21 25h1v1h-1zM24 25h1v1h-1zM26 25h1v1h-1zM34 25h2v1h-2zM3 26h1v1h-1zM5 26h3v1h-3zM10 26h3v1h-3zM16 26h3v1h-3zM20 26h3v1h-3zM25 26h3v1h-3zM29 26h2v1h-2zM32 26h2v1h-2zM3 27h8v1h-8zM12 27h3v1h-3zM16 27h2v1h-2zM19 27h1v1h-1zM21 27h3v1h-3zM25 27h1v1h-1zM27 27h6v1h-6zM34 27h1v1h-1zM11 28h1v1h-1zM14 28h1v1h-1zM16 28h1v1h-1zM18 28h2v1h-2zM21 28h1v1h-1zM25 28h1v1h-1zM27 28h1v1h-1zM31 28h1v1h-1zM33 28h2v1h-2zM3 29h7v1h-7zM11 29h2v1h-2zM14 29h2v1h-2zM18 29h1v1h-1zM21 29h2v1h-2zM25 29h3v1h-3zM29 29h1v1h-1zM31 29h1v1h-1zM33 29h1v1h-1zM3 30h1v1h-1zM9 30h1v1h-1zM11 30h1v1h-1zM13 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM21 30h2v1h-2zM26 30h2v1h-2zM31 30h4v1h-4zM3 31h1v1h-1zM5 31h3v1h-3zM9 31h1v1h-1zM11 31h1v1h-1zM14 31h1v1h-1zM20 31h3v1h-3zM26 31h6v1h-6zM34 31h1v1h-1zM3 32h1v1h-1zM5 32h3v1h-3zM9 32h1v1h-1zM11 32h1v1h-1zM13 32h2v1h-2zM17 32h1v1h-1zM19 32h1v1h-1zM21 32h3v1h-3zM25 32h1v1h-1zM27 32h2v1h-2zM30 32h1v1h-1zM34 32h2v1h-2zM3 33h1v1h-1zM5 33h3v1h-3zM9 33h1v1h-1zM12 33h1v1h-1zM14 33h1v1h-1zM16 33h1v1h-1zM18 33h2v1h-2zM22 33h1v1h-1zM24 33h3v1h-3zM28 33h1v1h-1zM30 33h2v1h-2zM33 33h3v1h-3zM3 34h1v1h-1zM9 34h1v1h-1zM13 34h2v1h-2zM21 34h1v1h-1zM26 34h1v1h-1zM28 34h8v1h-8zM3 35h7v1h-7zM11 35h3v1h-3zM15 35h1v1h-1zM17 35h4v1h-4zM25 35h7v1h-7z\" fill=\"#151310\"/></svg>"}; // QR filled
+
+/* 예시 방명록 시드 */
+const SEED_REVIEWS = {
+  1:[{name:"골목 산책자", text:"할아버지가 ‘양키시장’ 얘기를 하시던 이유를 이제 알았어요.", demo:true}],
+  3:[{name:"전축 세대", text:"우리 집 전축도 여기서 샀을지 모른다고 생각하니 뭉클합니다.", demo:true}],
+  6:[{name:"새벽시장 단골", text:"국밥 한 그릇의 역사가 이렇게 깊은 줄 몰랐네요.", demo:true}],
+  10:[{name:"교동 국민학교 졸업생", text:"극장 자리에 서서 QR을 찍는데 코끝이 시큰했습니다.", demo:true}]
+};
+const SEED_STAMPS = {1:14, 2:6, 3:9, 4:7, 5:11, 6:18, 7:5, 8:8, 9:6, 10:21}; // 예시 집계
+
+/* ============================================================
+   저장 (localStorage — 프로토타입: 이 기기에만)
+============================================================ */
+const store = {
+  get(k, fb){ try{ const v = localStorage.getItem("gyodong."+k); return v===null?fb:JSON.parse(v);}catch(e){ return fb; } },
+  set(k, v){ try{ localStorage.setItem("gyodong."+k, JSON.stringify(v)); }catch(e){} }
+};
+
+/* ============================================================
+   장면 일러스트 (SVG) — 과거/현재
+   ※ 실제 수집 사진으로 교체될 자리의 예시 일러스트
+============================================================ */
+function scenePalette(era){
+  if(era === "past") return {
+    sky:"#E4D5B4", far:"#C9B48C", bld:"#C2A87E", bldD:"#96794F", roof:"#7E6541",
+    road:"#A5906C", line:"#4C3D27", signBg:"#5F4D33", signTx:"#F0E5CB", glass:"#D9C9A4",
+    awnA:"#8F7752", awnB:"#6E5B3E", pole:"#6B573B", fig:"#5C4A30", accent:"#8F5B3E"
+  };
+  return {
+    sky:"#CDD8DC", far:"#B8C3C7", bld:"#DAD2C3", bldD:"#A89C88", roof:"#8E8577",
+    road:"#9BA0A2", line:"#3E3A33", signBg:"#2E2A24", signTx:"#F4EEDD", glass:"#C4D2D6",
+    awnA:"", awnB:"", pole:"#7C7468", fig:"#4A453C", accent:""
+  };
+}
+function shade(hex, f){ // hex 어둡게/밝게
+  const n = parseInt(hex.slice(1),16), r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+  const m = v => Math.max(0, Math.min(255, Math.round(v*f)));
+  return "#" + ((1<<24)+(m(r)<<16)+(m(g)<<8)+m(b)).toString(16).slice(1);
+}
+function awning(x, w, y, h, c1, c2){
+  let s = "";
+  const n = Math.round(w/26);
+  const seg = w/n;
+  for(let i=0;i<n;i++){
+    s += `<path d="M${x+i*seg} ${y} h${seg} v${h-7} a${seg/2} 7 0 0 1 -${seg} 0 Z" fill="${i%2?c1:c2}"/>`;
+  }
+  return `<g>${s}<rect x="${x}" y="${y-4}" width="${w}" height="5" fill="${c2}"/></g>`;
+}
+function motifArt(m, p, era){
+  const past = era==="past";
+  switch(m){
+    case "cans":{ let cans=""; const rows=[[80,208],[70,190],[86,172]];
+      rows.forEach((r,ri)=>{ for(let i=0;i<3-0;i++){ const cx=r[0]+i*30;
+        cans += `<rect x="${cx}" y="${r[1]}" width="24" height="26" rx="2" fill="${past?"#B99A6B":"#C8B089"}" stroke="${p.line}" stroke-width="1"/>
+        <ellipse cx="${cx+12}" cy="${r[1]}" rx="12" ry="4" fill="${past?"#D8C193":"#E2D2AE"}" stroke="${p.line}" stroke-width="1"/>
+        <rect x="${cx+4}" y="${r[1]+9}" width="16" height="9" fill="${past?"#8F5B3E":"#B8452F"}" opacity=".85"/>`; }});
+      return cans; }
+    case "tv":{ return `
+      <rect x="72" y="196" width="52" height="40" rx="4" fill="${past?"#6E5B3E":"#4A453C"}" stroke="${p.line}"/>
+      <rect x="79" y="203" width="30" height="24" rx="3" fill="${past?"#D9C9A4":"#9FD8CE"}"/>
+      <circle cx="116" cy="208" r="3" fill="${p.signTx}"/><circle cx="116" cy="218" r="3" fill="${p.signTx}"/>
+      <rect x="130" y="176" width="46" height="60" rx="4" fill="${past?"#7E6541":"#57503D"}" stroke="${p.line}"/>
+      <circle cx="153" cy="196" r="12" fill="${past?"#D9C9A4":"#C4D2D6"}" stroke="${p.line}"/>
+      <rect x="140" y="214" width="26" height="14" fill="${past?"#5F4D33":"#2E2A24"}"/>
+      <line x1="86" y1="196" x2="74" y2="178" stroke="${p.line}" stroke-width="1.6"/>
+      <line x1="86" y1="196" x2="100" y2="176" stroke="${p.line}" stroke-width="1.6"/>`; }
+    case "ring":{ return `
+      <rect x="70" y="196" width="110" height="42" fill="${past?"#D9C9A4":"#E7EFF1"}" stroke="${p.line}" stroke-width="1.4"/>
+      <rect x="70" y="230" width="110" height="8" fill="${past?"#8F7752":"#A89C88"}"/>
+      <circle cx="95" cy="212" r="7" fill="none" stroke="#B08D2E" stroke-width="3"/>
+      <circle cx="125" cy="212" r="7" fill="none" stroke="#B08D2E" stroke-width="3"/>
+      <circle cx="155" cy="212" r="7" fill="none" stroke="#B08D2E" stroke-width="3"/>
+      <path d="M95 199 l2.5 4 -5 0 Z" fill="#B08D2E"/>
+      ${past?"":`<path d="M162 190 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 Z" fill="#C9A75C"/>`}`; }
+    case "lp":{ let discs=""; for(let i=0;i<5;i++){ discs+=`<circle cx="${84+i*22}" cy="222" r="16" fill="${past?"#3E362A":"#332F28"}" stroke="${p.line}"/><circle cx="${84+i*22}" cy="222" r="5" fill="${past?"#B8452F":"#C23B2A"}"/>`; }
+      return `<rect x="62" y="204" width="132" height="34" fill="${past?"#8F7752":"#7C7468"}"/>` + discs +
+      `<circle cx="180" cy="200" r="22" fill="#332F28" stroke="${p.line}"/><circle cx="180" cy="200" r="7" fill="${past?"#D9A441":"#C9A75C"}"/>`; }
+    case "pot":{ return `
+      <rect x="86" y="214" width="84" height="24" rx="4" fill="${past?"#6E5B3E":"#57503D"}"/>
+      <ellipse cx="128" cy="214" rx="42" ry="10" fill="${past?"#4C3D27":"#332F28"}"/>
+      <ellipse cx="128" cy="211" rx="34" ry="7" fill="${past?"#D9C9A4":"#E2D2AE"}"/>
+      <path d="M112 196 q-6 -14 4 -24" stroke="${past?"#B8A987":"#C9C2B2"}" stroke-width="3.5" fill="none" stroke-linecap="round" opacity=".8"/>
+      <path d="M130 194 q-6 -16 4 -28" stroke="${past?"#B8A987":"#C9C2B2"}" stroke-width="3.5" fill="none" stroke-linecap="round" opacity=".8"/>
+      <path d="M148 196 q-6 -14 4 -22" stroke="${past?"#B8A987":"#C9C2B2"}" stroke-width="3.5" fill="none" stroke-linecap="round" opacity=".8"/>`; }
+    case "suit":{ return `
+      <rect x="118" y="176" width="3" height="14" fill="${p.line}"/>
+      <path d="M104 192 q16 -12 32 0 l6 46 h-44 Z" fill="${past?"#5F4D33":"#37536B"}" stroke="${p.line}"/>
+      <path d="M117 192 l3 10 3 -10 Z" fill="${p.signTx}"/>
+      <path d="M119 202 l1.5 16 -3 0 Z" fill="${past?"#8F5B3E":"#7A3B4F"}"/>
+      <g stroke="${p.line}" stroke-width="1.4" fill="${past?"#7E6541":"#4A453C"}">
+        <path d="M158 184 l8 -6 8 6 v50 h-16 Z"/><path d="M180 184 l8 -6 8 6 v50 h-16 Z"/>
+      </g>`; }
+    case "cup":{ return `
+      <rect x="84" y="206" width="56" height="34" rx="6" fill="${past?"#D9C9A4":"#E9E2D2"}" stroke="${p.line}" stroke-width="1.5"/>
+      <path d="M140 214 q16 2 0 18" fill="none" stroke="${p.line}" stroke-width="3"/>
+      <ellipse cx="112" cy="206" rx="28" ry="6" fill="${past?"#8F5B3E":"#6B4A33"}"/>
+      <circle cx="112" cy="204" r="5" fill="#D9A441"/>
+      <path d="M100 192 q-5 -10 3 -18 M118 190 q-5 -12 3 -20" stroke="${past?"#B8A987":"#C9C2B2"}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8"/>`; }
+    case "clock":{ let cl=""; const pos=[[86,192],[118,188],[150,192]];
+      pos.forEach((c,i)=>{ cl+=`<circle cx="${c[0]}" cy="${c[1]}" r="11" fill="${past?"#D9C9A4":"#EDE7DA"}" stroke="${p.line}" stroke-width="1.6"/>
+        <line x1="${c[0]}" y1="${c[1]}" x2="${c[0]}" y2="${c[1]-7}" stroke="${p.line}" stroke-width="1.4"/>
+        <line x1="${c[0]}" y1="${c[1]}" x2="${c[0]+(i-1)*5+3}" y2="${c[1]+2}" stroke="${p.line}" stroke-width="1.4"/>`; });
+      return cl + `<circle cx="118" cy="224" r="15" fill="${past?"#B99A6B":"#C8B089"}" stroke="${p.line}" stroke-width="2"/>
+        <line x1="118" y1="224" x2="118" y2="214" stroke="${p.line}" stroke-width="2"/>
+        <line x1="118" y1="224" x2="126" y2="227" stroke="${p.line}" stroke-width="2"/>`; }
+    default: return "";
+  }
+}
+function sceneSVG(spot, era){
+  const p = scenePalette(era);
+  const past = era === "past";
+  const hue = spot.scene.hue;
+  const awnA = past ? shade(hue,.72) : hue;
+  const awnB = past ? shade(hue,.5) : shade(hue,.72);
+  const W=480, H=300;
+  let s = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${spot.name} ${past?"과거":"현재"} 전경 일러스트 (예시)">`;
+  s += `<rect width="${W}" height="${H}" fill="${p.sky}"/>`;
+  // 원경 지붕선
+  s += `<path d="M0 96 h70 v-18 h48 v18 h60 v-12 h54 v12 h70 v-20 h58 v20 h60 v-10 h60 v106 H0 Z" fill="${p.far}" opacity=".55"/>`;
+  // 도로
+  s += `<rect x="0" y="238" width="${W}" height="62" fill="${p.road}"/>`;
+  s += `<path d="M0 238 H${W}" stroke="${p.line}" stroke-width="1.2" opacity=".5"/>`;
+
+  if(spot.scene.motif === "gate"){
+    // ——— 시장 정문 아치 ———
+    s += `<rect x="60" y="120" width="26" height="118" fill="${p.bldD}" stroke="${p.line}" stroke-width="1.5"/>`;
+    s += `<rect x="394" y="120" width="26" height="118" fill="${p.bldD}" stroke="${p.line}" stroke-width="1.5"/>`;
+    s += `<path d="M52 132 Q240 ${past?58:66} 428 132 l0 -30 Q240 ${past?26:34} 52 102 Z" fill="${past?shade(hue,.8):hue}" stroke="${p.line}" stroke-width="2"/>`;
+    s += `<text x="240" y="118" text-anchor="middle" font-family="'Song Myung',serif" font-size="30" letter-spacing="10" fill="${p.signTx}">${spot.scene.sign}</text>`;
+    // 아치 너머 골목 원근
+    for(let i=0;i<4;i++){
+      const y = 150+i*17, x = 110+i*22, w = 260-i*44;
+      s += `<rect x="${x}" y="${y}" width="${w}" height="9" rx="4" fill="${i%2?awnA:awnB}" opacity="${.9-i*.12}"/>`;
+    }
+    s += `<path d="M150 238 L210 168 L270 168 L330 238 Z" fill="${shade(p.road,1.08)}" opacity=".7"/>`;
+    if(past){
+      s += `<g fill="${p.fig}"><circle cx="150" cy="208" r="6"/><rect x="144" y="214" width="12" height="22" rx="4"/><circle cx="330" cy="212" r="6"/><rect x="324" y="218" width="12" height="20" rx="4"/><rect x="180" y="216" width="34" height="16" fill="${p.pole}"/><circle cx="188" cy="236" r="6" fill="none" stroke="${p.fig}" stroke-width="2"/><circle cx="208" cy="236" r="6" fill="none" stroke="${p.fig}" stroke-width="2"/></g>`;
+    } else {
+      s += `<g><rect x="168" y="206" width="18" height="32" rx="3" fill="#3E3A33"/><rect x="171" y="209" width="12" height="20" rx="2" fill="#9FD8CE"/><circle cx="315" cy="222" r="7" fill="${p.fig}"/><rect x="308" y="229" width="14" height="16" rx="4" fill="${p.fig}"/></g>`;
+      s += `<rect x="60" y="112" width="360" height="4" fill="#C23B2A" opacity=".65"/>`;
+    }
+  } else {
+    // ——— 일반 상점 파사드 ———
+    s += `<rect x="26" y="96" width="330" height="142" fill="${p.bld}" stroke="${p.line}" stroke-width="1.6"/>`;
+    s += `<rect x="26" y="88" width="330" height="10" fill="${p.roof}"/>`;
+    // 간판
+    s += `<rect x="40" y="108" width="240" height="34" fill="${p.signBg}" stroke="${p.line}" stroke-width="1.4"/>`;
+    s += `<text x="160" y="132" text-anchor="middle" font-family="'Song Myung',serif" font-size="21" letter-spacing="6" fill="${p.signTx}">${spot.scene.sign}</text>`;
+    if(!past) s += `<rect x="40" y="108" width="240" height="34" fill="none" stroke="#E8DDBE" stroke-width="1.2" stroke-dasharray="2 5" opacity=".9"/>`;
+    // 차양
+    s += awning(34, 250, 148, 22, awnA, awnB);
+    // 쇼윈도/출입문
+    s += `<rect x="52" y="176" width="152" height="62" fill="${p.glass}" stroke="${p.line}" stroke-width="1.5"/>`;
+    s += `<line x1="52" y1="176" x2="88" y2="238" stroke="#FFFFFF" stroke-width="7" opacity="${past?.18:.3}"/>`;
+    s += `<rect x="216" y="172" width="52" height="66" fill="${p.bldD}" stroke="${p.line}" stroke-width="1.5"/>`;
+    s += `<rect x="224" y="180" width="36" height="34" fill="${p.glass}"/>`;
+    s += `<circle cx="224" cy="212" r="2.6" fill="${p.line}"/>`;
+    // 진열 소품
+    s += motifArt(spot.scene.motif, p, era);
+    // 옆 건물
+    s += `<rect x="356" y="118" width="98" height="120" fill="${shade(p.bld,.9)}" stroke="${p.line}" stroke-width="1.4"/>`;
+    s += `<rect x="368" y="132" width="30" height="24" fill="${p.glass}"/><rect x="410" y="132" width="30" height="24" fill="${p.glass}"/>`;
+    s += `<rect x="368" y="170" width="72" height="10" fill="${past?shade(hue,.6):"#7C7468"}"/>`;
+    if(past){
+      // 세로 간판·자전거·좌판·전선
+      s += `<rect x="332" y="100" width="20" height="86" fill="${shade(hue,.66)}" stroke="${p.line}"/>`;
+      s += `<text x="342" y="112" writing-mode="tb" font-family="'Song Myung',serif" font-size="12" letter-spacing="3" fill="${p.signTx}">상회</text>`;
+      s += `<g stroke="${p.fig}" stroke-width="2" fill="none"><circle cx="308" cy="230" r="11"/><circle cx="338" cy="230" r="11"/><path d="M308 230 l12 -18 h12 l6 18 M320 212 h-8"/></g>`;
+      s += `<rect x="64" y="244" width="90" height="10" fill="${p.pole}"/><rect x="70" y="254" width="8" height="14" fill="${p.pole}"/><rect x="140" y="254" width="8" height="14" fill="${p.pole}"/>`;
+      s += `<circle cx="86" cy="240" r="7" fill="${shade(hue,.85)}"/><circle cx="104" cy="240" r="7" fill="${shade(hue,.7)}"/><circle cx="122" cy="240" r="7" fill="${shade(hue,.85)}"/>`;
+      s += `<line x1="0" y1="70" x2="480" y2="88" stroke="${p.line}" stroke-width="1.1" opacity=".6"/><line x1="0" y1="80" x2="480" y2="72" stroke="${p.line}" stroke-width="1.1" opacity=".5"/>`;
+      s += `<rect x="452" y="60" width="7" height="196" fill="${p.pole}"/><line x1="430" y1="72" x2="480" y2="66" stroke="${p.line}" stroke-width="1.4"/>`;
+    } else {
+      // 실외기·입간판·화분·CCTV·LED 흔적
+      s += `<rect x="300" y="150" width="34" height="24" fill="#B9BDBE" stroke="${p.line}"/><circle cx="317" cy="162" r="8" fill="none" stroke="${p.line}" stroke-width="1.6"/>`;
+      s += `<rect x="330" y="204" width="26" height="40" rx="3" fill="#E9E2D2" stroke="${p.line}"/><text x="343" y="222" text-anchor="middle" font-family="'IBM Plex Sans KR',sans-serif" font-size="8" fill="#3E3A33">OPEN</text>`;
+      s += `<rect x="58" y="246" width="26" height="16" rx="2" fill="#7A6A52"/><path d="M62 246 q9 -14 18 0 Z" fill="#5E7A54"/>`;
+      s += `<rect x="452" y="60" width="7" height="196" fill="${p.pole}"/><rect x="447" y="94" width="17" height="9" rx="2" fill="#4A453C"/>`;
+      s += `<line x1="0" y1="76" x2="480" y2="84" stroke="${p.line}" stroke-width="1" opacity=".35"/>`;
+    }
+    if(spot.scene.motif === "theater"){
+      if(past){
+        // 과거: 극장 전면 + 간판탑
+        s = s.replace(`<rect x="52" y="176" width="152" height="62"`, `<rect x="52" y="176" width="152" height="62" data-k="1"`);
+        s += `<rect x="120" y="40" width="34" height="70" fill="${shade(hue,.7)}" stroke="${p.line}" stroke-width="1.6"/>`;
+        s += `<text x="137" y="52" writing-mode="tb" font-family="'Song Myung',serif" font-size="13" letter-spacing="2" fill="${p.signTx}">교동극장</text>`;
+        s += `<rect x="60" y="182" width="40" height="50" fill="#E8DCC0" stroke="${p.line}"/><text x="80" y="204" text-anchor="middle" font-family="'Song Myung',serif" font-size="9" fill="#4C3D27">개봉</text><text x="80" y="218" text-anchor="middle" font-family="'Song Myung',serif" font-size="9" fill="#4C3D27">박두</text>`;
+        s += `<rect x="108" y="182" width="40" height="50" fill="#E8DCC0" stroke="${p.line}"/><rect x="114" y="188" width="28" height="30" fill="${shade(hue,.85)}"/>`;
+      }
+    }
+  }
+  // 현재 극장터 = 공터 오버라이드
+  if(spot.scene.motif === "theater" && !past){
+    s = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="옛 교동극장 터의 현재 — 주차장 (예시 일러스트)">`;
+    s += `<rect width="${W}" height="${H}" fill="${p.sky}"/>`;
+    s += `<path d="M0 96 h90 v-14 h60 v14 h84 v-20 h66 v20 h70 v-12 h110 v104 H0 Z" fill="${p.far}" opacity=".55"/>`;
+    s += `<rect x="0" y="180" width="${W}" height="120" fill="#ABA69B"/>`;
+    s += `<g stroke="#F4EEDD" stroke-width="2.5" opacity=".85"><line x1="70" y1="196" x2="40" y2="288"/><line x1="170" y1="196" x2="150" y2="288"/><line x1="270" y1="196" x2="262" y2="288"/><line x1="370" y1="196" x2="376" y2="288"/></g>`;
+    s += `<g><rect x="186" y="216" width="74" height="30" rx="8" fill="#57503D"/><rect x="200" y="206" width="44" height="18" rx="6" fill="#6B655A"/><circle cx="204" cy="248" r="8" fill="#332F28"/><circle cx="242" cy="248" r="8" fill="#332F28"/></g>`;
+    s += `<rect x="0" y="170" width="${W}" height="12" fill="#8E8577"/>`;
+    s += `<g><rect x="392" y="140" width="4" height="106" fill="#7C7468"/><rect x="360" y="118" width="88" height="42" rx="3" fill="#E9E2D2" stroke="#3E3A33" stroke-width="1.5"/><text x="404" y="136" text-anchor="middle" font-family="'IBM Plex Sans KR',sans-serif" font-size="10" font-weight="700" fill="#3E3A33">이 자리에</text><text x="404" y="150" text-anchor="middle" font-family="'IBM Plex Sans KR',sans-serif" font-size="10" font-weight="700" fill="#C23B2A">교동극장이 있었습니다</text></g>`;
+    s += `<path d="M60 132 q10 -22 30 -10" stroke="#8E8577" stroke-width="2" fill="none" opacity=".0"/>`;
+  }
+  s += `</svg>`;
+  return s;
+}
+
+/* ============================================================
+   렌더 — 색인 / 지도 핀 / QR 시트 / 스팟
+============================================================ */
+function esc(t){ const d=document.createElement("div"); d.textContent=t; return d.innerHTML; }
+
+function renderIndex(){
+  const ol = document.getElementById("indexList");
+  ol.innerHTML = SPOTS.map(s => `
+    <li class="${s.gone?"gone":""}">
+      <a href="#/spot/${s.n}">
+        <span class="idx-no num" aria-hidden="true">${String(s.n).padStart(2,"0")}</span>
+        <span><span class="idx-name">${esc(s.name)}</span><br><span class="idx-sub">${esc(s.cat)} · ${esc(s.tagline)}</span></span>
+        <span class="idx-year num">${esc(s.open)}<br>${s.gone?"<b style='color:var(--seal)'>사라진 공간</b>":"영업 중 (예시)"}</span>
+      </a>
+    </li>`).join("");
+}
+
+function renderPins(){
+  const g = document.getElementById("mapPins");
+  g.innerHTML = SPOTS.map((s,i) => {
+    const [x,y] = PIN_XY[i];
+    return `<a href="#/spot/${s.n}" class="m-pin ${s.gone?"gone":""}" aria-label="No.${s.n} ${esc(s.name)}">
+      <circle cx="${x}" cy="${y}" r="15"/>
+      <text x="${x}" y="${y+4.5}" text-anchor="middle">${s.n}</text>
+      <text x="${x}" y="${y+32}" text-anchor="middle" class="m-name" style="font-size:10.5px">${esc(s.name)}</text>
+    </a>`;
+  }).join("");
+}
+
+function renderQR(){
+  const grid = document.getElementById("qrGrid");
+  const tickets = [{key:"home", no:"表", name:"교동 기억지도", cat:"표지 — 전체 지도 열기"}]
+    .concat(SPOTS.map(s => ({key:String(s.n), no:String(s.n).padStart(2,"0"), name:s.name, cat:s.cat})));
+  grid.innerHTML = tickets.map(t => `
+    <div class="qr-ticket">
+      <div class="qrt-head">
+        <span class="qrt-no num">${t.no}</span>
+        <span><span class="qrt-name">${esc(t.name)}</span><br><span class="qrt-cat">${esc(t.cat)}</span></span>
+      </div>
+      <div class="qr-slot" data-qr="${t.key}">${QR_SVGS[t.key] || '<span class="qr-wait">QR 생성 대기 — 게시 후 자동 삽입</span>'}</div>
+      <div class="qrt-foot">휴대폰 카메라로 스캔 → <b>이 자리의 70년 이야기</b>가 열립니다<br>교동 기억지도 · 교동 기억 리빙랩</div>
+    </div>`).join("");
+}
+
+/* ——— 스팟 페이지 ——— */
+function matChips(s){
+  const items = [
+    ["인터뷰 영상", s.gone ? "구술 수집" : "촬영 예정", "wip"],
+    ["과거 사진", "수집 중", "wip"],
+    ["현재 사진", "예시 일러스트", ""],
+    ["음성 기록", "예정", ""],
+    ["물건", s.objects.length + "점 등재", "done"],
+    ["역사자료", "조사 중", "wip"]
+  ];
+  return items.map(([k,v,c]) => `<span class="chip ${c}">${k} · <b>${v}</b></span>`).join("");
+}
+
+function renderSpot(n){
+  const s = SPOTS.find(x => x.n === n);
+  const view = document.getElementById("view-spot");
+  if(!s){ view.innerHTML = "<p>등재되지 않은 번호입니다. <a href='#/map'>기억지도로</a></p>"; return; }
+  const next = SPOTS[(s.n) % SPOTS.length];
+  const isLast = s.n === SPOTS.length;
+  const dist = isLast ? null : LEGS[s.n - 1];
+  const walkMin = dist ? Math.max(1, Math.round(dist / 67)) : null;
+  const stamps = SEED_STAMPS[s.n] + (store.get("stamp."+s.n, false) ? 1 : 0);
+  const myStamp = store.get("stamp."+s.n, false);
+  const reviews = (SEED_REVIEWS[s.n] || []).concat(store.get("reviews."+s.n, []));
+
+  view.innerHTML = `
+  <div class="spot-nav no-print">
+    <a class="btn ghost small" href="#/map">← 기억지도</a>
+    <span class="pos num">REGISTRY ${String(s.n).padStart(2,"0")} / 10</span>
+    ${isLast ? `<a class="btn ghost small" href="#/">코스 완주 →</a>` : `<a class="btn ghost small" href="#/spot/${next.n}">다음 →</a>`}
+  </div>
+
+  <article class="ledger">
+    <header class="ledger-head">
+      <div class="reg-row">
+        <span class="reg-no num">No.${String(s.n).padStart(2,"0")}</span>
+        <span class="reg-type ${s.gone?"gone":""}">${s.gone ? "등재 유형 — 사라진 공간의 기록" : "등재 유형 — 영업 중인 가게"}</span>
+      </div>
+      <h2 class="ledger-title">📍 ${esc(s.name)}</h2>
+      <p class="ledger-tag">${esc(s.tagline)}</p>
+    </header>
+    <div class="field-grid">
+      <div class="field"><span class="label">소재지</span><span class="v">${esc(s.addr)}</span></div>
+      <div class="field"><span class="label">업종</span><span class="v">${esc(s.cat)}</span></div>
+      <div class="field"><span class="label">${s.gone ? "존속 기간" : "개업"}</span><span class="v num">${esc(s.open)}</span></div>
+      <div class="field"><span class="label">기록일</span><span class="v num">${RECORD_DATE}</span></div>
+    </div>
+    <div class="mat-row" aria-label="수집 자료 현황">${matChips(s)}</div>
+
+    <div class="ledger-body">
+
+      <section class="ledger-sec" aria-label="사장님의 이야기">
+        <div class="ledger-sec-head"><span class="no num">기록 1</span><h3>${s.gone ? "이 자리의 이야기" : "사장님의 이야기"}</h3><span class="rule"></span></div>
+        <div class="video-ph">
+          <button class="play-btn" data-video aria-label="인터뷰 영상 안내 열기">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <span class="vtitle">INTERVIEW — ${esc(s.owner)}</span>
+          <span class="rec">● REC (예정)</span>
+        </div>
+        <div class="video-note" data-video-note>
+          🎬 인터뷰 영상은 현장 촬영·동의 절차 후 이 자리에 연결됩니다. 지금 보고 계신 것은 프로토타입 화면입니다.
+        </div>
+        <ul class="story-list">${s.story.map(t => `<li>${esc(t)}</li>`).join("")}</ul>
+      </section>
+
+      <section class="ledger-sec" aria-label="과거와 현재">
+        <div class="ledger-sec-head"><span class="no num">기록 2</span><h3>그때와 지금 — ${esc(s.era)} ↔ 오늘</h3><span class="rule"></span></div>
+        <div class="ba">
+          <div class="mat">
+            <div class="ba-stage" data-ba>
+              <div class="ba-under">${sceneSVG(s, "now")}</div>
+              <div class="ba-top">${sceneSVG(s, "past")}</div>
+              <div class="ba-bar" aria-hidden="true"></div>
+              <div class="ba-tags"><span>${esc(s.era)} (예시)</span></div>
+              <span class="ba-tag-now">오늘 (예시)</span>
+              <input type="range" min="0" max="100" value="50" aria-label="과거와 현재 비교 슬라이더 — 왼쪽이 과거">
+            </div>
+          </div>
+          <div class="ba-cap"><span>◂ 손잡이를 끌어 시간을 오가 보세요</span><span>실제 수집 사진으로 교체될 예시 일러스트</span></div>
+        </div>
+      </section>
+
+      <section class="ledger-sec" aria-label="사장님의 기억">
+        <div class="ledger-sec-head"><span class="no num">기록 3</span><h3>${s.gone ? "남은 사람들의 기억" : "사장님의 기억"}</h3><span class="rule"></span></div>
+        <figure class="memory" style="margin:0">
+          <p class="hand">${esc(s.memory)}</p>
+          <figcaption class="who"><span>— ${esc(s.owner)}</span><span class="mini-seal" aria-hidden="true">口述<br>採錄</span></figcaption>
+        </figure>
+        <p class="src-note">※ 구술 채록 예시 문장 — 실제 인터뷰 채록으로 교체, 게재 전 본인 확인</p>
+      </section>
+
+      <section class="ledger-sec" aria-label="물건의 기록">
+        <div class="ledger-sec-head"><span class="no num">기록 4</span><h3>물건이 말한다</h3><span class="rule"></span></div>
+        <div class="objects">
+          ${s.objects.map((o,i) => `<div class="obj" data-n="${String(i+1).padStart(2,"0")}"><div class="oi" aria-hidden="true">${o.ic}</div><div class="on">${esc(o.name)}</div><div class="od">${esc(o.d)}</div></div>`).join("")}
+        </div>
+      </section>
+
+      <section class="ledger-sec" aria-label="다음 이야기">
+        <div class="ledger-sec-head"><span class="no num">기록 5</span><h3>다음 이야기</h3><span class="rule"></span></div>
+        ${isLast ? `
+        <a class="next-ticket" href="#/contribute">
+          <span class="nt-left">COURSE&nbsp;COMPLETE</span>
+          <span class="nt-main"><span class="label">10곳의 기록을 모두 걸었습니다</span>
+            <span class="nt-name">당신의 교동을 들려주세요</span>
+            <span class="nt-sub">완주 기념 — “내가 기억하는 교동” 한 줄이 열한 번째 기록이 됩니다</span></span>
+          <span class="nt-dist"><span class="arrow" aria-hidden="true">✎</span><span class="w">기억 제보</span></span>
+        </a>` : `
+        <a class="next-ticket" href="#/spot/${next.n}">
+          <span class="nt-left">NEXT&nbsp;STORY</span>
+          <span class="nt-main"><span class="label">No.${String(next.n).padStart(2,"0")} · ${esc(next.cat)}</span>
+            <span class="nt-name">${esc(next.name)}</span>
+            <span class="nt-sub">${esc(next.tagline)}</span></span>
+          <span class="nt-dist"><span class="d num">${dist}m</span><span class="w">도보 ${walkMin}분</span><span class="arrow" aria-hidden="true">→</span></span>
+        </a>`}
+      </section>
+
+      <section class="ledger-sec" aria-label="방명록">
+        <div class="ledger-sec-head"><span class="no num">기록 6</span><h3>방명록 — 다녀간 사람들</h3><span class="rule"></span></div>
+        <div class="stamp-zone">
+          <button class="stamp-btn" data-stamp ${myStamp ? "disabled" : ""}>
+            <span class="mini-seal" style="transform:none" aria-hidden="true">다녀<br>感</span>
+            ${myStamp ? "도장을 찍었습니다" : "도장 찍기 — 다녀갔어요"}
+          </button>
+          <span class="stamp-count">지금까지 <b class="num" data-stamp-count>${stamps}</b>개의 도장 <span style="color:var(--faint)">(예시 집계 포함)</span></span>
+        </div>
+        <div class="stamp-wall" data-stamp-wall aria-hidden="true"></div>
+        <ul class="review-list" data-reviews></ul>
+        <form class="review-form" data-review-form>
+          <div class="row">
+            <input type="text" name="rname" maxlength="16" placeholder="이름/별명 (선택)" aria-label="이름 또는 별명">
+          </div>
+          <textarea name="rtext" maxlength="200" required placeholder="이 장소에서의 느낌, 떠오른 기억을 한 줄 남겨 주세요." aria-label="리뷰 내용"></textarea>
+          <div class="form-foot">
+            <button class="btn small" type="submit">리뷰 남기기</button>
+            <span class="form-note">프로토타입: 리뷰·도장은 이 기기에만 저장됩니다 (정식 서비스에서 공유 집계)</span>
+          </div>
+        </form>
+      </section>
+
+    </div>
+  </article>
+
+  <div class="spot-nav no-print" style="margin-top:16px">
+    ${s.n > 1 ? `<a class="btn ghost small" href="#/spot/${s.n-1}">← No.${String(s.n-1).padStart(2,"0")} ${esc(SPOTS[s.n-2].name)}</a>` : `<a class="btn ghost small" href="#/">← 표지</a>`}
+    <a class="btn ghost small" href="#/qr">이 장소의 QR 보기</a>
+  </div>`;
+
+  bindSpot(view, s, stamps, reviews);
+}
+
+function bindSpot(view, s, stamps, reviews){
+  // 인터뷰 안내
+  const vbtn = view.querySelector("[data-video]");
+  vbtn.addEventListener("click", () => view.querySelector("[data-video-note]").classList.toggle("on"));
+  // 슬라이더
+  const stage = view.querySelector("[data-ba]");
+  const range = stage.querySelector("input[type=range]");
+  const setCut = v => stage.style.setProperty("--cut", v + "%");
+  setCut(50);
+  range.addEventListener("input", () => setCut(range.value));
+  // 도장
+  const wall = view.querySelector("[data-stamp-wall]");
+  const drawWall = (total, mineNew) => {
+    const cap = Math.min(total, 24);
+    let h = "";
+    for(let i=0;i<cap;i++) h += `<span class="stamp-mini ${mineNew && i===cap-1 ? "mine":""}">교동</span>`;
+    if(total > cap) h += `<span class="stamp-count" style="align-self:center">+${total-cap}</span>`;
+    wall.innerHTML = h;
+  };
+  drawWall(stamps, false);
+  const sbtn = view.querySelector("[data-stamp]");
+  sbtn.addEventListener("click", () => {
+    if(store.get("stamp."+s.n, false)) return;
+    store.set("stamp."+s.n, true);
+    const total = SEED_STAMPS[s.n] + 1;
+    view.querySelector("[data-stamp-count]").textContent = total;
+    sbtn.disabled = true;
+    sbtn.childNodes[2].textContent = " 도장을 찍었습니다";
+    drawWall(total, true);
+    toast("도장을 찍었습니다 — 다녀간 기록이 남았어요 (이 기기)");
+  });
+  // 리뷰
+  const list = view.querySelector("[data-reviews]");
+  const drawReviews = arr => {
+    list.innerHTML = arr.length ? "" : `<li class="review" style="border-style:dashed"><p class="rtext" style="color:var(--muted)">아직 리뷰가 없습니다. 첫 기록을 남겨 주세요.</p></li>`;
+    arr.forEach(r => {
+      const li = document.createElement("li"); li.className = "review";
+      const head = document.createElement("div"); head.className = "rhead";
+      const b = document.createElement("b"); b.textContent = r.name || "익명 방문자";
+      head.appendChild(b);
+      if(r.demo){ const chip = document.createElement("span"); chip.className="demo-chip"; chip.textContent="예시"; head.appendChild(chip); }
+      const p = document.createElement("p"); p.className = "rtext"; p.textContent = r.text;
+      li.appendChild(head); li.appendChild(p); list.appendChild(li);
+    });
+  };
+  drawReviews(reviews);
+  view.querySelector("[data-review-form]").addEventListener("submit", e => {
+    e.preventDefault();
+    const f = e.target;
+    const entry = { name: f.rname.value.trim().slice(0,16), text: f.rtext.value.trim().slice(0,200) };
+    if(!entry.text) return;
+    const mine = store.get("reviews."+s.n, []);
+    mine.push(entry);
+    store.set("reviews."+s.n, mine);
+    drawReviews((SEED_REVIEWS[s.n] || []).concat(mine));
+    f.reset();
+    toast("리뷰가 저장되었습니다 (프로토타입: 이 기기에만)");
+  });
+}
+
+/* ——— 제보 ——— */
+function renderContribs(){
+  const ul = document.getElementById("cList");
+  const arr = store.get("contribs", []);
+  ul.innerHTML = arr.length ? `<li class="form-note" style="list-style:none">이 기기에 저장된 제보 ${arr.length}건 (데모)</li>` : "";
+  arr.forEach(c => {
+    const li = document.createElement("li"); li.className = "review";
+    const head = document.createElement("div"); head.className = "rhead";
+    const b = document.createElement("b"); b.textContent = c.name || "익명";
+    const era = document.createElement("span"); era.textContent = c.era + (c.place ? " · " + c.place : "");
+    head.appendChild(b); head.appendChild(era);
+    const p = document.createElement("p"); p.className = "rtext"; p.textContent = c.text;
+    li.appendChild(head); li.appendChild(p); ul.appendChild(li);
+  });
+}
+document.getElementById("cForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const f = e.target;
+  const entry = {
+    name: document.getElementById("cName").value.trim().slice(0,20),
+    era: document.getElementById("cEra").value,
+    place: document.getElementById("cPlace").value.trim().slice(0,40),
+    text: document.getElementById("cText").value.trim().slice(0,500)
+  };
+  if(!entry.text) return;
+  const arr = store.get("contribs", []);
+  arr.push(entry);
+  store.set("contribs", arr);
+  f.reset();
+  renderContribs();
+  toast("제보가 저장되었습니다 — 고맙습니다 (프로토타입: 이 기기에만)");
+});
+
+/* ============================================================
+   라우터 / 토스트
+============================================================ */
+let toastTimer;
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("on"), 2600);
+}
+document.getElementById("printBtn").addEventListener("click", () => window.print());
+
+const VIEWS = ["home","map","spot","about","qr","contribute"];
+function route(){
+  const h = location.hash.replace(/^#\/?/, "");
+  let name = "home", arg = null;
+  if(h.startsWith("spot/")){ name = "spot"; arg = parseInt(h.slice(5), 10); }
+  else if(VIEWS.includes(h)) name = h;
+  VIEWS.forEach(v => document.getElementById("view-" + v).classList.toggle("on", v === name));
+  document.querySelectorAll("nav.tabs a").forEach(a => {
+    const on = a.dataset.nav === (name === "spot" ? "map" : name);
+    if(on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+  });
+  if(name === "spot") renderSpot(arg || 1);
+  window.scrollTo({top: 0, behavior: "instant"});
+  const v = document.getElementById("view-" + name);
+  if(v) v.focus({preventScroll: true});
+}
+window.addEventListener("hashchange", route);
+
+renderIndex();
+renderPins();
+renderQR();
+renderContribs();
+route();
+</script>
+
+</body>
+</html>
