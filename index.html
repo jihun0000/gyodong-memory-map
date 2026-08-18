@@ -585,6 +585,15 @@ footer{border-top:1.5px solid var(--line-strong);margin-top:60px}
   .card{padding:16px 16px}
   .roadmap{font-size:.84rem}
   .spot-nav .btn{padding:6px 9px;font-size:.76rem}
+  .ba-cap{flex-direction:column;gap:3px;align-items:flex-start}
+  .qrt-head{flex-direction:column;align-items:center;text-align:center;gap:3px;padding:14px 8px 4px}
+  .index-list a{grid-template-columns:44px 1fr;row-gap:2px}
+  .idx-year{grid-column:2;text-align:left;line-height:1.45}
+  .form-foot{flex-direction:column;align-items:flex-start;gap:8px}
+  .map-cap{flex-direction:column;align-items:flex-start;gap:6px}
+  .stamp-zone{flex-direction:column;align-items:flex-start;gap:10px}
+  .nt-sub{font-size:.74rem}
+  .qrt-foot{font-size:.68rem}
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -1427,7 +1436,7 @@ function renderSpot(n){
               <input type="range" min="0" max="100" value="50" aria-label="과거와 현재 비교 슬라이더 - 왼쪽이 과거">
             </div>
           </div>
-          <div class="ba-cap"><span>◂ 손잡이를 끌어 시간을 오가 보세요</span><span>${s.pastPhoto ? "그때 · 재현 이미지 / 오늘 · 현장 사진 (2026.08)" : s.nowPhoto ? "그때 · 기록화 / 오늘 · 현장 사진 (2026.08)" : "교동 기억지도 기록화"}</span></div>
+          <div class="ba-cap"><span>◂ 좌우로 밀어 보세요</span><span>${s.pastPhoto ? "그때 · 재현 이미지 / 오늘 · 현장 사진 (2026.08)" : s.nowPhoto ? "그때 · 기록화 / 오늘 · 현장 사진 (2026.08)" : "교동 기억지도 기록화"}</span></div>
         </div>
       </section>
 
