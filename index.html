@@ -681,7 +681,7 @@ footer{border-top:1.5px solid var(--line-strong);margin-top:60px}
           <text x="400" y="106" text-anchor="middle" class="m-name">교동시장길</text>
           <text x="668" y="290" class="m-name" transform="rotate(90 668 290)" text-anchor="middle">귀금속골목</text>
           <text x="395" y="448" text-anchor="middle" class="m-name">먹자골목</text>
-          <text x="124" y="290" class="m-name" transform="rotate(-90 124 290)" text-anchor="middle">번개시장 방면</text>
+          <text x="124" y="290" class="m-name" transform="rotate(-90 124 290)" text-anchor="middle">옛 극장길</text>
           <text x="400" y="278" text-anchor="middle" class="m-name">교동전자상가 (교동2·3길)</text>
           <!-- 도보 루트 -->
           <path id="routePath" class="m-route" pathLength="600"
@@ -949,66 +949,66 @@ const SPOTS = [
     scene:{sign:"교동시장", motif:"gate", hue:"#B8452F"}
   },
   {
-    n:2, name:"미제골목", cat:"수입식품 · 잡화 골목", addr:"교동시장 안 수입상가 골목",
-    open:"1950년대부터", era:"1970년대", gone:false, status:"운영 중",
-    type:"등재 유형 · 살아있는 골목",
+    n:2, name:"럭키상회", cat:"수입 잡화 · 미제골목", addr:"교동시장 미제골목 어귀",
+    open:"1960년대부터", era:"1970년대", gone:false, status:"운영 중",
+    type:"등재 유형 · 살아있는 가게",
     tagline:"미제 초콜릿 한 알이 귀하던 시절",
     story:[
-      "미제 군복과 수입 과자를 팔던 골목으로 이름났던 자리입니다",
-      "귀한 수입 물건을 찾는 사람들로 붐비며 '양키시장'이라는 별명을 만든 주역이었습니다",
-      "지금도 수입식품과 잡화 가게들이 그 명맥을 잇고 있습니다"
+      "미군 부대에서 흘러나온 통조림·초콜릿·커피를 팔아 온 수입 잡화점입니다",
+      "이 골목 일대가 '미제 물건'으로 이름난 양키시장의 심장부였습니다",
+      "명절이면 수입 선물세트를 찾는 손님들로 골목에 줄이 섰다는 이야기가 전해집니다"
     ],
-    memory:"미제 초콜릿 한 알이 귀하던 시절, 이 골목은 세상에서 제일 큰 백화점이었다.",
+    memory:"미제 초콜릿 한 박스 들어오는 날엔 골목에 줄이 섰다. 아이들 눈이 제일 먼저 알았지.",
     refs:["위키백과","나무위키"],
     objects:[
       {ic:"🥫", name:"미제 통조림", d:"군수품과 함께 골목으로 들어온 낯선 맛"},
       {ic:"🍫", name:"수입 초콜릿과 커피", d:"귀하던 시절, 최고의 선물로 꼽히던 물건"},
       {ic:"⚖️", name:"접시저울", d:"과자를 근으로 달아 팔던 시절의 도구"}
     ],
-    scene:{sign:"수입상회", motif:"cans", hue:"#3C6E47"}
+    scene:{sign:"럭키상회", motif:"cans", hue:"#3C6E47"}
   },
   {
-    n:3, name:"교동전자상가 골목", cat:"전자제품 · 교동2길·3길", addr:"대구 중구 교동2길·교동3길 일대",
-    open:"1956년 무렵 형성", era:"1990년대", gone:false, status:"약 100곳 운영 중",
-    type:"등재 유형 · 살아있는 골목",
-    tagline:"라디오 소리로 먼저 알아보던 골목",
+    n:3, name:"대한전자", cat:"전자·오디오 수리 · 전자골목", addr:"교동2길·교동3길 전자골목",
+    open:"1970년대부터", era:"1980년대", gone:false, status:"운영 중",
+    type:"등재 유형 · 살아있는 가게",
+    tagline:"라디오를 고치면 마음도 고쳐졌다",
     story:[
-      "1956년 무렵 미군부대에서 나온 카메라·수입 전축·라디오·전자부품이 거래되며 자연스럽게 상가가 형성됐습니다",
-      "1980년대 게임기·가전·컴퓨터 점포가 늘며 1990년대 전성기에는 점포가 400여 곳에 이르렀습니다",
-      "지금은 교동2길·교동3길을 중심으로 100여 곳이 컴퓨터·음향·가전을 팔며 골목을 지키고 있습니다"
+      "진공관 라디오부터 전축·워크맨까지 고쳐 온 전자골목의 수리 가게입니다",
+      "이 골목은 1956년 무렵 미군부대에서 나온 카메라·수입 전축·라디오가 거래되며 형성됐습니다",
+      "1990년대 전성기엔 점포가 400여 곳에 달했고, 지금도 100여 곳이 골목을 지키고 있습니다"
     ],
-    memory:"라디오 소리, 전축 소리. 이 골목은 언제나 소리로 먼저 알아봤다.",
-    refs:["MBC뉴스 2014","나무위키","대한민국역사박물관"],
+    memory:"혼수로 전축 맞추러 오던 신혼부부들, 그 설레는 얼굴로 이 골목이 먹고살았다.",
+    refs:["MBC뉴스 2014","나무위키"],
     objects:[
       {ic:"📻", name:"진공관 라디오", d:"미군 PX에서 흘러나온 물건들, 골목의 시작"},
       {ic:"🎚", name:"수입 전축", d:"혼수 1호로 꼽히던 시절이 있었던 물건"},
       {ic:"🔧", name:"납땜인두", d:"'고쳐 쓰는 물건'의 시대를 지켜 온 도구"}
     ],
-    scene:{sign:"교동전자상가", motif:"tv", hue:"#2F4F76"}
+    scene:{sign:"대한전자", motif:"tv", hue:"#2F4F76"}
   },
   {
-    n:4, name:"교동귀금속골목", cat:"귀금속 · 대구패션주얼리특구", addr:"교동시장 남편, 대구역 방면",
-    open:"1970년 시작", era:"1980년대", gone:false, status:"운영 중 · 특구 지정",
-    type:"등재 유형 · 살아있는 골목",
-    tagline:"돌반지의 골목, 세공의 골목",
+    n:4, name:"형제금은방", cat:"귀금속 · 귀금속골목", addr:"교동 귀금속골목, 대구역 방면",
+    open:"1980년대부터", era:"1980년대", gone:false, status:"운영 중",
+    type:"등재 유형 · 살아있는 가게",
+    tagline:"돌반지의 골목, 세공의 손끝",
     story:[
-      "1970년 대구역 남쪽 교동시장의 시계 매장들에서 시작됐습니다",
-      "1970년대 중반부터 순금·18K 세공 공장이 자리 잡으며 대구·경북 귀금속 도소매의 중심이 됐습니다",
-      "2005년 300여 업체가 모여 '대구패션주얼리특구'로 지정됐고, 대구·경북 보석 수출의 32%를 담당해 왔습니다"
+      "돌반지와 결혼 예물의 기억이 겹겹이 쌓여 온 귀금속골목의 금은방입니다",
+      "골목은 1970년 시계 매장들에서 시작해 순금·18K 세공 공장이 자리 잡으며 커졌습니다",
+      "300여 업체가 모여 '대구패션주얼리특구'로 지정된, 대구·경북 귀금속의 중심입니다"
     ],
     memory:"돌반지 한 돈에 온 가족이 웃던 날들이, 이 진열장 앞을 지나갔다.",
-    refs:["대구패션주얼리특구상인회","영남일보 2025","나무위키"],
+    refs:["대구패션주얼리특구상인회","영남일보 2025"],
     objects:[
       {ic:"⌚", name:"시계", d:"1970년, 골목의 시작은 시계방이었습니다"},
       {ic:"💍", name:"돌반지 틀", d:"'한 돈의 축하'가 만들어지던 원형"},
       {ic:"🛠", name:"세공 도구", d:"팔기만 하는 골목이 아니라 만드는 골목이라는 증거"}
     ],
-    scene:{sign:"귀금속골목", motif:"ring", hue:"#9C8034"}
+    scene:{sign:"형제금은방", motif:"ring", hue:"#9C8034"}
   },
   {
-    n:5, name:"교동 구제골목", cat:"구제 의류 · 빈티지", addr:"교동시장 일대 구제 의류 골목",
-    open:"양키시장에서 이어짐", era:"1980년대", gone:false, status:"운영 중",
-    type:"등재 유형 · 살아있는 골목",
+    n:5, name:"빈티지샵 777", cat:"구제 의류 · 빈티지", addr:"교동 구제골목",
+    open:"10년째 영업 중", era:"전자상가 시절", gone:false, status:"운영 중",
+    type:"등재 유형 · 살아있는 가게",
     tagline:"누군가의 옷이 다시 첫 옷이 되는 곳",
     story:[
       "미군 부대에서 흘러나온 미군 구제 의류와 밀리터리 잡화를 취급하던 수입 의류점",
@@ -1017,7 +1017,7 @@ const SPOTS = [
     ],
     memory:"내가 영업할 때는 빈티지 옷가게 이런 게 없었어. 오로지 전자상가였지.",
     voice:"빈티지샵 777 사장님",
-    refs:["상인 인터뷰 2026.08","나무위키","대구역사문화대전"],
+    refs:["상인 인터뷰 2026.08","나무위키"],
     objects:[
       {ic:"👖", name:"구제 청바지", d:"바다를 두 번 건너온 옷"},
       {ic:"🧥", name:"군복 재킷", d:"양키시장 시절부터 골목의 단골 품목"},
@@ -1025,102 +1025,102 @@ const SPOTS = [
     ],
     video:"interview-777.mp4", vposter:"interview-777-poster.jpg",
     vtitle:"교동 빈티지샵 777 사장님 인터뷰", vdur:"2분 11초",
-    scene:{sign:"구제의류", motif:"suit", hue:"#37536B"}
+    scene:{sign:"빈티지샵 777", motif:"suit", hue:"#37536B", signPast:"교동전자상가", motifPast:"tv"}
   },
   {
-    n:6, name:"교동 먹자골목", cat:"분식 · 대구 10미 납작만두", addr:"교동시장 안 음식 골목",
+    n:6, name:"할매국밥", cat:"따로국밥 · 먹자골목", addr:"교동시장 먹자골목",
     open:"시장과 함께", era:"1980년대", gone:false, status:"운영 중",
-    type:"등재 유형 · 살아있는 골목",
-    tagline:"납작만두 한 접시의 골목",
+    type:"등재 유형 · 살아있는 가게",
+    tagline:"새벽 네 시, 시장보다 먼저 끓는 솥",
     story:[
-      "교동시장 안 음식 골목으로 납작만두·양념오뎅·순대가 유명합니다",
-      "납작만두는 '대구 10미'에 꼽히는 대구 대표 간식입니다",
-      "빈대떡·삶은 소라·우동까지, 시장 구경의 반은 이 골목에서 이뤄집니다"
+      "새벽 장사꾼들의 속을 데워 온 시장 국밥집입니다",
+      "교동시장 먹자골목은 납작만두·양념오뎅·순대로 이름난 골목입니다",
+      "납작만두는 '대구 10미'에 꼽히는 대구 대표 간식입니다"
     ],
-    memory:"납작만두 한 접시면, 시장 구경이 두 배로 길어졌다.",
+    memory:"국물이 먼저 일어나야 시장이 일어난다. 새벽 장사꾼들 속을 데워 온 세월이다.",
     refs:["대구역사문화대전","나무위키"],
     objects:[
-      {ic:"🥟", name:"납작만두 철판", d:"대구 10미가 구워지는 자리"},
-      {ic:"🍢", name:"오뎅 솥", d:"겨울 골목의 난로가 되어 주는 솥"},
-      {ic:"🐚", name:"소라 솥", d:"먹자골목의 오래된 별미, 삶은 소라"}
+      {ic:"🍲", name:"무쇠솥", d:"시장의 새벽을 열어 온 국솥"},
+      {ic:"🥄", name:"나무 국자", d:"손잡이가 닳아 얇아진 세월의 도구"},
+      {ic:"🥟", name:"납작만두 철판", d:"대구 10미가 구워지는 먹자골목의 자리"}
     ],
-    scene:{sign:"먹자골목", motif:"pot", hue:"#8A4B2D"}
+    scene:{sign:"할매국밥", motif:"pot", hue:"#8A4B2D"}
   },
   {
-    n:7, name:"번개시장", cat:"새벽시장 · 농수산물", addr:"경부선 대구역 옆",
-    open:"1970년대 · 1988 개설", era:"1970년대", gone:false, status:"새벽~오전 운영",
-    type:"등재 유형 · 새벽의 시장",
-    tagline:"번개처럼 서고 번개처럼 사라지는 시장",
+    n:7, name:"신사양복점", cat:"맞춤 양복", addr:"교동시장 안 골목",
+    open:"1970년대부터", era:"1970년대", gone:false, status:"운영 중",
+    type:"등재 유형 · 살아있는 가게",
+    tagline:"치수보다 사람을 먼저 재던 가게",
     story:[
-      "경부선 대구역 바로 옆에서 새벽부터 오전까지 열리는 재래시장입니다",
-      "1970년대 대구 인근 농촌 상인들이 새벽 3시부터 오전 11시까지 장사해 '번개시장'이라 불렸습니다",
-      "1988년 정식 개설됐으며 농수산물을 중심으로 의류·생선·잡화가 거래됩니다"
+      "첫 월급 양복, 결혼 예복, 환갑 정장. 인생의 매듭마다 찾던 맞춤 양복점입니다",
+      "원단을 감던 손과 수십 년 치 치수 장부가 그대로 남아 있습니다",
+      "교동시장에는 옷과 원단, 구제 의류를 다루는 가게들이 대를 이어 왔습니다"
     ],
-    memory:"번개처럼 서고, 번개처럼 사라진다. 새벽 세 시의 시장.",
-    refs:["나무위키","대한민국 구석구석"],
+    memory:"첫 월급으로 양복 맞추던 청년들의 어깨를 다 기억한다. 어깨가 펴지면 인생도 펴진다 했지.",
+    refs:["리빙랩 조사 수집 중"],
     objects:[
-      {ic:"💡", name:"백열전구", d:"새벽 좌판을 밝히던 불빛"},
-      {ic:"🥬", name:"채소 상자", d:"농촌에서 첫차로 올라온 아침"},
-      {ic:"⚖️", name:"손저울", d:"새벽 거래를 지켜 온 오랜 도구"}
+      {ic:"✂️", name:"재단 가위", d:"수십 년 갈아 쓴 가게의 손"},
+      {ic:"📒", name:"치수 장부", d:"단골들의 어깨와 세월이 적힌 기록"},
+      {ic:"📏", name:"초크와 자", d:"가봉 표시가 스며든 도구"}
     ],
-    scene:{sign:"번개시장", motif:"cans", hue:"#4E5E3A"}
+    scene:{sign:"신사양복점", motif:"suit", hue:"#4E5E3A"}
   },
   {
-    n:8, name:"교동 도깨비야시장", mname:"도깨비야시장", cat:"야시장 · 교동길", addr:"교동길 일대",
-    open:"매일 저녁 6시~자정", era:"저녁이 오기 전", gone:false, status:"매일 18~24시",
-    type:"등재 유형 · 밤의 시장",
-    tagline:"해가 지면 다시 깨어나는 골목",
+    n:8, name:"중앙다방", cat:"다방", addr:"교동 골목 안",
+    open:"1970년대부터", era:"1980년대", gone:false, status:"운영 중",
+    type:"등재 유형 · 살아있는 가게",
+    tagline:"계란 노른자 동동, 약속의 장소",
     story:[
-      "매일 밤 교동길 일대에 열리는 야시장입니다",
-      "먹거리 매대가 골목을 채우며 저녁 6시부터 자정까지 밤의 교동을 깨웁니다",
-      "낮의 시장이 끝나면, 같은 골목에서 하루가 한 번 더 시작됩니다"
+      "쌍화차에 계란 노른자를 띄워 주던 골목의 사랑방입니다",
+      "전화가 귀하던 시절, '다방 앞에서 보자'가 만남의 공식이었습니다",
+      "벨벳 소파와 자개 테이블에 그 시절의 시간이 그대로 남아 있습니다"
     ],
-    memory:"해가 지면 도깨비처럼 다시 깨어나는 교동길.",
-    refs:["대한민국 구석구석"],
+    memory:"전화가 귀하던 시절엔 여기가 다 사서함이었어. '중앙다방 앞에서 보자'가 인사말이었지.",
+    refs:["리빙랩 조사 수집 중"],
     objects:[
-      {ic:"💡", name:"전구줄", d:"밤 골목의 지붕이 되어 주는 불빛"},
-      {ic:"🛒", name:"먹거리 매대", d:"저녁마다 새로 서는 가게"},
-      {ic:"🏮", name:"도깨비 등", d:"야시장의 문패"}
+      {ic:"☕", name:"쌍화차 잔", d:"노른자 동동, 다방의 상징"},
+      {ic:"🔥", name:"성냥갑", d:"다방 이름이 인쇄된 판촉 성냥"},
+      {ic:"📝", name:"쪽지 메모판", d:"손님들이 약속을 남기던 판"}
     ],
-    scene:{sign:"도깨비야시장", motif:"cup", hue:"#7A3B4F"}
+    scene:{sign:"중앙다방", motif:"cup", hue:"#7A3B4F"}
   },
   {
-    n:9, name:"대구역 앞 광장", cat:"만남의 장소 · 시장의 관문", addr:"대구역 건너 옛 대우빌딩 광장 일대",
-    open:"대구역과 함께", era:"1970년대", gone:false, status:"광장 재조성 진행",
-    type:"등재 유형 · 변화의 현장",
-    tagline:"기차에서 내려 처음 만나는 교동",
+    n:9, name:"교동시계", cat:"시계 수리", addr:"교동 귀금속골목 어귀",
+    open:"1970년대부터", era:"1970년대", gone:false, status:"운영 중",
+    type:"등재 유형 · 살아있는 가게",
+    tagline:"멈춘 시간을 다시 걷게 하는 손",
     story:[
-      "기차에서 내린 사람들이 처음 만나는 교동의 관문이었습니다",
-      "2004년 KTX 개통으로 동대구역이 장거리 승객을 흡수하고 환승 축이 옮겨 가며 대구역 일대의 발길이 줄었습니다",
-      "옛 대우빌딩 앞 광장은 '동성로 르네상스'의 하나로 문화 광장으로 재조성되고 있습니다"
+      "태엽 시계부터 오늘까지, 골목의 시간을 고쳐 온 시계방입니다",
+      "교동 귀금속골목의 뿌리도 1970년 시계 매장들이었습니다",
+      "유품 시계를 들고 오는 손님이 유난히 많은 가게입니다"
     ],
-    memory:"'대우빌딩 앞에서 보자.' 그 한마디면 약속 설명이 끝나던 시절이 있었다.",
-    refs:["경북일보","대구신문","나무위키"],
+    memory:"시계는 멈춰도 버리는 물건이 아니다. 고치는 게 시간만은 아니지 싶다.",
+    refs:["대구패션주얼리특구상인회","리빙랩 조사 수집 중"],
     objects:[
-      {ic:"📞", name:"공중전화", d:"만나기로 한 사람을 기다리던 자리"},
-      {ic:"🕰", name:"광장의 시계", d:"기차 시간과 약속 시간이 함께 걸려 있던 곳"},
-      {ic:"🪑", name:"광장 벤치", d:"기다림이 앉아 있던 자리"}
+      {ic:"🔍", name:"루페(확대경)", d:"눈에 끼우는 수리용 확대경"},
+      {ic:"⚙️", name:"태엽 부품함", d:"연대별로 분류된 무브먼트 부품"},
+      {ic:"🕰", name:"벽시계들", d:"수리 후 주인을 기다리는 시계들"}
     ],
-    scene:{sign:"만남의 광장", motif:"clock", hue:"#33527B"}
+    scene:{sign:"교동시계", motif:"clock", hue:"#33527B"}
   },
   {
-    n:10, name:"사라진 400개의 간판", mname:"사라진 간판들", cat:"사라진 풍경 · 전자골목의 어제", addr:"교동전자상가 골목 일대",
-    open:"전성기 1990년대", era:"1990년대", gone:true, status:"기록으로 남은 풍경",
-    type:"등재 유형 · 사라진 풍경의 기록",
-    tagline:"간판은 내려갔지만, 이름은 남아 있습니다",
+    n:10, name:"옛 교동극장 터", mname:"옛 극장 터", cat:"사라진 공간 · 기록 등재", addr:"교동 골목 안 옛 극장 자리",
+    open:"기록 조사 중", era:"1970년대", gone:true, status:"사라진 풍경",
+    type:"등재 유형 · 사라진 공간의 기록",
+    tagline:"간판은 내려갔지만, 장면은 남아 있습니다",
     story:[
-      "1990년대 전성기, 이 골목의 전자제품 점포는 400여 곳에 달했습니다",
-      "IMF와 대형 전자유통점, 온라인 쇼핑의 시대를 지나며 점포는 100여 곳으로 줄었습니다",
-      "이 QR은 내려진 간판들을 기억하기 위해 골목에 섰습니다. 기억지도가 존재하는 이유입니다"
+      "골목 어른들의 기억 속, 동네 극장이 있던 자리입니다",
+      "개봉일이면 골목이 극장 앞부터 붐볐다는 이야기가 전해집니다",
+      "이 QR은 '사라진 공간'을 기록하기 위해 빈자리에 섰습니다. 기억지도가 존재하는 이유입니다"
     ],
-    memory:"간판 사백 개가 내려졌지만, 골목은 그 이름들을 다 기억한다.",
-    refs:["MBC뉴스 2014","나무위키"],
+    memory:"개봉하는 날엔 골목이 다 극장 앞이었지. 지금도 매표소 자리부터 눈에 밟힌다.",
+    refs:["주민 구술 조사 중"],
     objects:[
-      {ic:"🪧", name:"내려진 간판", d:"한 가게의 역사가 접히던 순간"},
-      {ic:"🔒", name:"셔터 자물쇠", d:"더 열리지 않는 아침"},
-      {ic:"🕸", name:"빈 진열대", d:"먼지가 대신 자리를 지키는 곳"}
+      {ic:"🎬", name:"상영 전단", d:"그 시절 개봉작의 흔적을 찾고 있습니다"},
+      {ic:"💺", name:"좌석 번호판", d:"어둠 속에서 자리를 찾아 주던 번호"},
+      {ic:"🎟", name:"매표소 도장", d:"'검인' 한 방으로 열리던 두 시간의 다른 세상"}
     ],
-    scene:{sign:"교동전자상가", motif:"tv", hue:"#37536B"}
+    scene:{sign:"교동극장", motif:"theater", hue:"#6E3A3A", goneNote1:"이 자리에", goneNote2:"교동극장이 있었습니다"}
   }
 ];
 const LEGS = [120, 90, 150, 80, 200, 60, 110, 140, 170]; // n → n+1 (m, 도보 코스 설계값)
@@ -1228,6 +1228,15 @@ function motifArt(m, p, era){
       return cl + `<circle cx="118" cy="224" r="15" fill="${past?"#B99A6B":"#C8B089"}" stroke="${p.line}" stroke-width="2"/>
         <line x1="118" y1="224" x2="118" y2="214" stroke="${p.line}" stroke-width="2"/>
         <line x1="118" y1="224" x2="126" y2="227" stroke="${p.line}" stroke-width="2"/>`; }
+    case "theater": return `
+      <rect x="64" y="184" width="42" height="52" fill="#E8DCC0" stroke="${p.line}"/>
+      <text x="85" y="205" text-anchor="middle" font-family="'Song Myung',serif" font-size="10" fill="#4C3D27">개봉</text>
+      <text x="85" y="219" text-anchor="middle" font-family="'Song Myung',serif" font-size="10" fill="#4C3D27">박두</text>
+      <rect x="114" y="184" width="42" height="52" fill="#E8DCC0" stroke="${p.line}"/>
+      <rect x="120" y="190" width="30" height="32" fill="${past?"#8F5B3E":"#7A3B4F"}"/>
+      <rect x="164" y="196" width="30" height="40" fill="${past?"#5F4D33":"#2E2A24"}" stroke="${p.line}"/>
+      <rect x="170" y="204" width="18" height="14" fill="${p.glass}"/>
+      <text x="179" y="230" text-anchor="middle" font-family="'IBM Plex Sans KR',sans-serif" font-size="7" fill="${p.signTx}">매표</text>`;
     default: return "";
   }
 }
@@ -1235,6 +1244,8 @@ function sceneSVG(spot, era){
   const p = scenePalette(era);
   const past = era === "past";
   const hue = spot.scene.hue;
+  const _sign = past ? (spot.scene.signPast || spot.scene.sign) : spot.scene.sign;
+  const _motif = past ? (spot.scene.motifPast || spot.scene.motif) : spot.scene.motif;
   const awnA = past ? shade(hue,.72) : hue;
   const awnB = past ? shade(hue,.5) : shade(hue,.72);
   const W=480, H=300;
@@ -1246,12 +1257,12 @@ function sceneSVG(spot, era){
   s += `<rect x="0" y="238" width="${W}" height="62" fill="${p.road}"/>`;
   s += `<path d="M0 238 H${W}" stroke="${p.line}" stroke-width="1.2" opacity=".5"/>`;
 
-  if(spot.scene.motif === "gate"){
+  if(_motif === "gate"){
     // --- 시장 정문 아치 ---
     s += `<rect x="60" y="120" width="26" height="118" fill="${p.bldD}" stroke="${p.line}" stroke-width="1.5"/>`;
     s += `<rect x="394" y="120" width="26" height="118" fill="${p.bldD}" stroke="${p.line}" stroke-width="1.5"/>`;
     s += `<path d="M52 132 Q240 ${past?58:66} 428 132 l0 -30 Q240 ${past?26:34} 52 102 Z" fill="${past?shade(hue,.8):hue}" stroke="${p.line}" stroke-width="2"/>`;
-    s += `<text x="240" y="118" text-anchor="middle" font-family="'Song Myung',serif" font-size="30" letter-spacing="10" fill="${p.signTx}">${spot.scene.sign}</text>`;
+    s += `<text x="240" y="118" text-anchor="middle" font-family="'Song Myung',serif" font-size="30" letter-spacing="10" fill="${p.signTx}">${_sign}</text>`;
     // 아치 너머 골목 원근
     for(let i=0;i<4;i++){
       const y = 150+i*17, x = 110+i*22, w = 260-i*44;
@@ -1270,7 +1281,7 @@ function sceneSVG(spot, era){
     s += `<rect x="26" y="88" width="330" height="10" fill="${p.roof}"/>`;
     // 간판
     s += `<rect x="40" y="108" width="240" height="34" fill="${p.signBg}" stroke="${p.line}" stroke-width="1.4"/>`;
-    s += `<text x="160" y="132" text-anchor="middle" font-family="'Song Myung',serif" font-size="21" letter-spacing="6" fill="${p.signTx}">${spot.scene.sign}</text>`;
+    s += `<text x="160" y="132" text-anchor="middle" font-family="'Song Myung',serif" font-size="21" letter-spacing="6" fill="${p.signTx}">${_sign}</text>`;
     if(!past) s += `<rect x="40" y="108" width="240" height="34" fill="none" stroke="#E8DDBE" stroke-width="1.2" stroke-dasharray="2 5" opacity=".9"/>`;
     // 차양
     s += awning(34, 250, 148, 22, awnA, awnB);
@@ -1281,7 +1292,7 @@ function sceneSVG(spot, era){
     s += `<rect x="224" y="180" width="36" height="34" fill="${p.glass}"/>`;
     s += `<circle cx="224" cy="212" r="2.6" fill="${p.line}"/>`;
     // 진열 소품
-    s += motifArt(spot.scene.motif, p, era);
+    s += motifArt(_motif, p, era);
     // 옆 건물
     s += `<rect x="356" y="118" width="98" height="120" fill="${shade(p.bld,.9)}" stroke="${p.line}" stroke-width="1.4"/>`;
     s += `<rect x="368" y="132" width="30" height="24" fill="${p.glass}"/><rect x="410" y="132" width="30" height="24" fill="${p.glass}"/>`;
@@ -1317,7 +1328,7 @@ function sceneSVG(spot, era){
       for(let ly=158; ly<234; ly+=9){ s += `<line x1="${x+10}" y1="${ly}" x2="${x+118}" y2="${ly}" stroke="${p.line}" stroke-width="1" opacity=".5"/>`; }
       if(i===0) s += `<rect x="${x+34}" y="168" width="60" height="34" fill="#E9E2D2" stroke="${p.line}" transform="rotate(-3 ${x+64} 185)"/><text x="${x+64}" y="189" text-anchor="middle" font-family="'IBM Plex Sans KR',sans-serif" font-size="11" font-weight="700" fill="#3E3A33" transform="rotate(-3 ${x+64} 185)">임대문의</text>`;
     });
-    s += `<g><rect x="392" y="150" width="4" height="96" fill="#7C7468"/><rect x="330" y="106" width="122" height="48" rx="3" fill="#E9E2D2" stroke="#3E3A33" stroke-width="1.5"/><text x="391" y="126" text-anchor="middle" font-family="'IBM Plex Sans KR',sans-serif" font-size="10" font-weight="700" fill="#3E3A33">이 골목에 400여 개의</text><text x="391" y="142" text-anchor="middle" font-family="'IBM Plex Sans KR',sans-serif" font-size="10" font-weight="700" fill="#C23B2A">간판이 있었습니다</text></g>`;
+    s += `<g><rect x="392" y="150" width="4" height="96" fill="#7C7468"/><rect x="330" y="106" width="122" height="48" rx="3" fill="#E9E2D2" stroke="#3E3A33" stroke-width="1.5"/><text x="391" y="126" text-anchor="middle" font-family="'IBM Plex Sans KR',sans-serif" font-size="10" font-weight="700" fill="#3E3A33">${spot.scene.goneNote1||"이 골목에 400여 개의"}</text><text x="391" y="142" text-anchor="middle" font-family="'IBM Plex Sans KR',sans-serif" font-size="10" font-weight="700" fill="#C23B2A">${spot.scene.goneNote2||"간판이 있었습니다"}</text></g>`;
   }
   s += `</svg>`;
   return s;
